@@ -5,7 +5,7 @@ training:
   learning_rate : 0.001
   device: 'cuda:3'
   save_interval: 1000
-  checkpoint_dir: 'models/'
+  checkpoint_dir: '../models/'
 
 model:
   input_dim: 1000

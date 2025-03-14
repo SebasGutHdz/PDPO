@@ -7,8 +7,8 @@ sys.path.append(projec_root)
 import yaml
 import torch
 from pathlib import Path
-import toy_data 
-from utils_FM import MLP,ParameterizedMLP,ParameterizedWrapper,order_state_to_tensor
+import parametric_pushforward.data_sets as data_sets
+from parametric_pushforward.parametric_mlp import MLP,ParameterizedMLP,ParameterizedWrapper,order_state_to_tensor
 import torch
 import torch.nn as nn
 from torch.utils.data import TensorDataset, DataLoader
@@ -51,7 +51,7 @@ class Config:
         Initialize data set based on config file
         '''
         data_config = self.config['data']
-        data_set = toy_data.inf_train_gen(data_config['type'],batch_size = data_config['total_data'],dim= self.config['model']['input_dim'])
+        data_set = data_sets.inf_train_gen(data_config['type'],batch_size = data_config['total_data'],dim= self.config['model']['input_dim'])
 
         data_set = TensorDataset(torch.tensor(data_set).float().to(self.config['training']['device']))
         dataloader = DataLoader(data_set,batch_size = self.config['training']['batch_size'],shuffle = True)
