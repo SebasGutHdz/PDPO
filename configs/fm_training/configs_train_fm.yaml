@@ -1,0 +1,20 @@
+# config.yaml
+training:
+  n_epochs: 4_000
+  batch_size: 2500
+  learning_rate : 0.001
+  device: 'cuda:3'
+  save_interval: 1000
+  checkpoint_dir: 'models/'
+
+model:
+  input_dim: 1000
+  hidden_dim: 128
+  num_layers: 4
+  activation_fn: 'softplus' # or 'tanh' or 'softplus' or 'relu' or 'swish'
+  time_varying: True
+
+data:
+  type: 'gauss1_opinion_1000d' # 'swissroll', 'circles', 'moons', 'checkerboard','rings', '8gaussians', 'pinwheel', '2spirals','cos', '2DGM1','2DGM2',
+  total_data: 20_000
+  
