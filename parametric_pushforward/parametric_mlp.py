@@ -19,12 +19,11 @@ Key Components:
 The networks support time-varying behavior by optionally including time as an input dimension.
 '''
 
-import sys
-import os
+
 import torch as torch
 import torch.nn.functional as F
 import torch.nn as nn
-import numpy as np
+
 
 
 
@@ -75,10 +74,12 @@ class MLP(torch.nn.Module):
         layers = []
         # Input layer (add extra dim if time-varying)
         layers.append(torch.nn.Linear(dim + (1 if time_varying else 0), w))
+        layers.append(torch.nn.LayerNorm(w))
         layers.append(activation_fn)
         # Hidden layers
         for i in range(num_layers-2):
             layers.append(torch.nn.Linear(w, w))
+            layers.append(torch.nn.LayerNorm(w))
             layers.append(activation_fn)
         # Output layer
         layers.append(torch.nn.Linear(w, out_dim))
@@ -156,6 +157,7 @@ class ParameterizedMLP(nn.Module):
         b = theta[current_idx:current_idx+b_size]
         current_idx += b_size
         h = F.linear(h,w,b)
+        h = F.layer_norm(h, [h.size(-1)])
         h = self.activation_fn(h)
 
         # Hidden layer
@@ -167,6 +169,7 @@ class ParameterizedMLP(nn.Module):
             b = theta[current_idx:current_idx + b_size]
             current_idx += b_size
             h = F.linear(h,w,b)
+            h = F.layer_norm(h, [h.size(-1)])
             h = self.activation_fn(h)
 
         # Output layer parameters

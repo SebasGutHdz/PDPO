@@ -173,11 +173,11 @@ def inf_train_gen(data, rng=None, batch_size=200,dim=2):
         mean = -np.ones(dim)
         data = rng.multivariate_normal(mean=mean, cov=cov_matrix, size=batch_size)
         return data.astype("float32")
-    elif data == "gaussian1_d":
-        cov_matrix = np.array([[1,0],[0,1]])*0.5
-        mean = -np.ones(dim)
-        data = rng.multivariate_normal(mean=mean, cov=cov_matrix, size=batch_size)
-        return data.astype("float32")
+    # elif data == "gaussian1_d":
+    #     cov_matrix = np.array([[1,0],[0,1]])*0.5
+    #     mean = -np.ones(dim)
+    #     data = rng.multivariate_normal(mean=mean, cov=cov_matrix, size=batch_size)
+    #     return data.astype("float32")
     
     elif data == "gauss0_opinion_2d":
         cov = np.array([[0.5, 0.0], [0.0, 0.25]])

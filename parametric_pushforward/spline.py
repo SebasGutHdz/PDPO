@@ -1,37 +1,70 @@
 '''
-Spline Implementation for Neural Transport Maps
+Neural Transport Map Splines for Density Path Optimization
 
-This module implements a spline-based approach for constructing continuous paths of probability 
-distributions via neural transport maps. The key idea is to interpolate between parameters of 
-neural networks that define transport maps, creating a continuous flow of distributions.
+This module implements a method for finding optimal paths between probability distributions
+using neural transport maps and spline interpolation. The approach combines ideas from
+optimal transport, neural ODEs, and path optimization.
+
+Core Concepts:
+-------------
+1. Neural Transport Maps:
+   - Neural networks that transform samples from one distribution to another
+   - Parameters of these networks define the transport map
+   - Uses Neural ODEs to generate continuous flows
+
+2. Spline Interpolation:
+   - Creates smooth paths through the parameter space of neural networks
+   - Interpolates between parameters of transport maps at endpoints
+   - Supports both linear and cubic spline interpolation
+
+3. Energy Functions:
+   - Kinetic Energy: Measures the "speed" of distribution evolution
+   - Potential Energy: Optional costs for path constraints
+   - Entropy: Tracks density evolution along the path
+   - Fisher Information: Geometric structure of the path
+
+4. Optimization:
+   - Path Optimization: Finds optimal interior points of the spline
+   - Coupling Optimization: Matches endpoint distributions
+   - Geodesic Warmup: Initializes path using Wasserstein geometry
 
 Key Components:
-
-1. Spline Class: Core class that handles interpolation between neural network parameters and 
-   computes trajectories through the parameter space.
-
-2. Transport Maps: Uses neural ODEs to transform samples from a base distribution through the 
-   interpolated parameter space.
-
-3. Energy Functions: Implements various energy terms including:
-   - Kinetic energy: Measures the "velocity" of parameter changes
-   - Potential energy: Optional additional costs on the path
-   - Entropy: Optional term to track density evolution
-   - Fisher information: Optional term to measure geometric properties
-
-4. Optimization: Provides methods to optimize both:
-   - The path through parameter space (optimize_path)
-   - The boundary conditions (optimize_coupling)
+-------------
+- Spline Class: Core implementation of the interpolation and optimization
+- Assemble_spline: Factory function to create spline instances
+- Energy Computations: Methods for computing various path costs
+- Sampling: Functions to generate samples along the path
 
 Usage:
-    spline = Assemble_spline(theta0, theta1, arch, ...)
-    spline.optimize_path(...)  # Optimize the interpolation path
-    samples = spline.gen_sample_trajectory(...)  # Generate samples along the path
+------
+# Create a spline between two distributions
+spline, t = Assemble_spline(
+    theta0=initial_params,
+    theta1=target_params,
+    arch=[input_dim, hidden_dim, num_layers, activation],
+    data0="gaussian",  # Initial distribution
+    data1="mixture",   # Target distribution
+)
+
+# Optimize the path
+spline.optimize_path(...)
+
+# Generate samples along the path
+samples = spline.gen_sample_trajectory(...)
+
+References:
+----------
+[1] Neural Transport Maps for Density Path Optimization
+[2] Optimal Transport and Wasserstein Distance
+[3] Neural Ordinary Differential Equations
+
+Authors: [Your names]
+License: [License info]
 '''
 
 # Add project root to path for imports
 from pathlib import Path
-project_root = Path(__file__).parent.parent.absolute()
+project_root = Path(__file__).parent.absolute()
 import sys
 sys.path.append(str(project_root))
 
@@ -549,19 +582,19 @@ class Spline(torch.nn.Module):
             
             if self.entropy_pot and not self.fisher_pot:
                 log_density,samples_path = self.gen_sample_trajectory(x0 = x0_eval,num_samples=bs,t_traj = t_traj,time_steps_node=t_node,solver = 'midpoint',sensitivity='autograd')
-                lagrangian,ke,pe = self.lagrangian(samples_path,t_traj,log_density = log_density)
+                lagrangian,_,_ = self.lagrangian(samples_path,t_traj,log_density = log_density)
                 # hamiltonian = self.hamiltonian(samples_path,t_traj,log_density = log_density)
             elif self.fisher_pot and not self.entropy_pot:
                 norm_score,samples_path = self.gen_sample_trajectory(x0 = x0_eval,num_samples=bs,t_traj = t_traj,time_steps_node=t_node,solver = 'midpoint',sensitivity='autograd')
-                lagrangian,ke,pe = self.lagrangian(samples_path,t_traj,score = norm_score)
+                lagrangian,_,_ = self.lagrangian(samples_path,t_traj,score = norm_score)
                 # hamiltonian = self.hamiltonian(samples_path,t_traj,score = norm_score)
             elif self.fisher_pot and self.entropy_pot:
                 log_density,norm_score,samples_path = self.gen_sample_trajectory(x0 = x0_eval,num_samples=bs,t_traj = t_traj,time_steps_node=t_node,solver = 'midpoint',sensitivity='autograd')
-                lagrangian,ke,pe = self.lagrangian(samples_path,t_traj,log_density = log_density,score = norm_score)
+                lagrangian,_,_ = self.lagrangian(samples_path,t_traj,log_density = log_density,score = norm_score)
                 # hamiltonian = self.hamiltonian(samples_path,t_traj,log_density = log_density,score = norm_score)
             else:
                 samples_path = self.gen_sample_trajectory(x0 = x0_eval,num_samples=bs,t_traj = t_traj,time_steps_node=t_node,solver = 'midpoint',sensitivity='autograd')
-                lagrangian,ke,pe = self.lagrangian(samples_path,t_traj)
+                lagrangian,_,_ = self.lagrangian(samples_path,t_traj)
                 # hamiltonian = self.hamiltonian(samples_path,t_traj)
             
                            

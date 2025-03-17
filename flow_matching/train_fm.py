@@ -31,11 +31,13 @@ from pathlib import Path
 project_root = Path(__file__).parent.parent.absolute()
 sys.path.append(str(project_root))
 
+
 import yaml
 import torch
 from pathlib import Path
 import parametric_pushforward.data_sets as data_sets
-from parametric_pushforward.parametric_mlp import MLP,ParameterizedMLP,ParameterizedWrapper,order_state_to_tensor
+from parametric_pushforward.parametric_mlp import MLP,Sin
+
 import torch.nn as nn
 from torch.utils.data import TensorDataset, DataLoader
 from tqdm import tqdm
@@ -49,7 +51,7 @@ ACTIVATION_FNS = {
     'leaky_relu': nn.LeakyReLU(),
     'elu': nn.ELU(),
     'swish': nn.SiLU(),
-    'sin': torch.sin()
+    'sin': Sin()
 }
 
 class Config:
@@ -59,6 +61,7 @@ class Config:
     '''
     def __init__(self,config_path: str | Path)-> None:
         try:
+            
             with open(config_path,'r') as f:
                 self.config = yaml.safe_load(f)
         except FileNotFoundError:
@@ -180,6 +183,7 @@ def train_flow_matching(config_path):
     path = cfg.config['training']['checkpoint_dir']+cfg.config['data']['type']+\
            f'[{cfg.config["model"]["input_dim"]},{cfg.config["model"]["hidden_dim"]},'+\
            f'{cfg.config["model"]["num_layers"]},{cfg.config["model"]["activation_fn"]}]'
+    path = str(project_root)+'/'+path
     checkpoint_dir = Path(path)
     checkpoint_dir.mkdir(exist_ok=True)
 
@@ -213,11 +217,15 @@ def train_flow_matching(config_path):
         if epoch == cfg.config['training']['n_epochs']-1:
             cfg.save_checkpoint(model,optimizer,epoch,avg_loss,
                               checkpoint_dir/f'final.pth')
+            config_save_path = checkpoint_dir/f'config.yaml'
+            with open(config_save_path,'w') as f:
+                yaml.dump(cfg.config,f,default_flow_style=False)
 
     return model
 
-if __name__ == '__main__':
-    train_flow_matching('configs/fm_training/configs_train_fm.yaml')
+if __name__ == '__main__':    
+    train_flow_matching(str(project_root)+'/configs/fm_training/configs_train_fm.yaml')
+    
     
 
     

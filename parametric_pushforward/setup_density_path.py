@@ -1,7 +1,3 @@
-from pathlib import Path
-path_root = Path(__file__).parent.parent.absolute()
-print(str(path_root))
-
 import torch
 from torch.distributions import MultivariateNormal
 import torch.nn.functional as F
@@ -41,11 +37,8 @@ def load_boundary_models(config,device):
         arch_str,
         config['data']['source']['checkpoint'],
     )
-    bd0_path_str  = str(path_root)+str(bd0_path)
-    bd0_path = Path(bd0_path_str)
-    
 
-    bd0_parameter = torch.load(bd0_path,map_location=device)['model_state_dict']
+    bd0_parameter = torch.load(bd0_path,map_location=device)
 
     #Load bd1 model
     bd1_path = model_path(
@@ -54,10 +47,7 @@ def load_boundary_models(config,device):
         config['data']['target']['checkpoint']
     )
 
-    bd1_path_str  = str(path_root)+str(bd1_path)
-    bd1_path = Path(bd1_path_str)
-
-    bd1_parameter = torch.load(bd1_path,map_location=device)['model_state_dict']
+    bd1_parameter = torch.load(bd1_path,map_location=device)
 
     return bd0_parameter,bd1_parameter
 
@@ -65,7 +55,7 @@ def setup_prior(config,device):
     '''Setup prior distribution'''
     assert config['prior']['type'] == 'gaussian',f"Prior type ({config['prior']['type']}) must be 'gaussian'."
     assert config['prior']['dimension'] == config['architecture']['input_dim'], f"Prior dimension ({config['prior']['dimension']}) must match network input dimension ({config['architecture']['input_dim']})"
-    prior = MultivariateNormal(torch.zeros(config['architecture']['input_dim']).to(device),torch.eye(config['architecture']['input_dim']).to(device))
+    prior = MultivariateNormal(torch.zeros(config['architecture']['input_dim']).to(device),torch.eye(config['architecture']['input_dimension']).to(device))
     
     return prior
 def get_activation(name):
@@ -147,7 +137,7 @@ def setup_optimizers(spline,config):
 
     return (optimizer_path,scheduler_path),(optimizer_coupling,scheduler_coupling)
 
-    
+
     
             
     
