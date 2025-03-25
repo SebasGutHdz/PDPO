@@ -30,7 +30,7 @@ prior:
 # Spline configuration
 spline:
   type: "cubic"  # Options: linear, cubic
-  num_collocation: 5  # Number of collocation points
+  num_collocation: 3  # Number of collocation points
   t_partition: 25     # Time partition points
   det_time: 1
 
@@ -38,11 +38,11 @@ spline:
 potential_functions:
   # - "geodesic"
   - "fisher_information"
-  # - "entropy"
-  # - "obstacle_cost_vneck"
+  - "entropy"
+  - "obstacle_cost_vneck"
   # - "quadartic_well"
-  - "congestion_cost"
-  - "obstacle_cost_stunnel"
+  # - "congestion_cost"
+  # - "obstacle_cost_stunnel"
   # - "obstacle_cost_gmm"
 coefficients_potentials:
   sigma: 1.0

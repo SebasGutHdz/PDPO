@@ -36,6 +36,9 @@ from parametric_pushforward.spline import Assemble_spline
 from parametric_pushforward.visualization import path_visualization_snapshots,disimilarity_snapshots,plot_hist
 from parametric_pushforward.setup_density_path_problem import initialize_experiment,load_boundary_models,setup_prior,get_activation,get_potential_functions,opinion_dynamics_setup,setup_optimizers
 from parametric_pushforward.parametric_mlp import MLP,order_state_to_tensor
+import parametric_pushforward.data_sets as data_sets
+
+from geomloss import SamplesLoss
 
 
 def run_experiments(config_path):
@@ -190,6 +193,8 @@ def run_experiments(config_path):
     potential_history = []
     bd0_history = []
     bd1_history = []
+    bd0_distance = []
+    bd1_distance = []
     checkpoint_path = os.path.join(checkpoints_dir, f"initial.pth")
     torch.save({
                 'direct_model': spline.state_dict(),
@@ -211,11 +216,77 @@ def run_experiments(config_path):
                     checkpoint_path
                 )
 
-    
+    loss = SamplesLoss(loss = 'sinkhorn',p =2 ,blur = 0.05)
+    comp_bd = 5000
+
     for experiment in range(len(config['optimization']['optimization_steps'])):
         print(f'Experiment {experiment + 1}')
+
+
         
         for i in range(config['optimization']['optimization_steps'][experiment]):
+
+            # Visualization and logging
+        
+            if i == 0 or i == config['optimization']['optimization_steps'][experiment] - 1 or (i + 1) % (config['optimization']['optimization_steps'][experiment] // 5) == 0:
+
+                s = torch.linspace(0, 1, 30).to(device)
+                interpolation = ema(s)
+                # Create and save visualization
+                plt.figure(figsize=(10, 10))
+                
+                samples_path = path_visualization_snapshots(
+                    interpolation=interpolation,
+                    arch=arch,
+                    spline=spline,
+                    x0 = config['visualization']['plot_bounds']['x_min'],
+                    y0 = config['visualization']['plot_bounds']['y_min'],
+                    x1 = config['visualization']['plot_bounds']['x_max'],
+                    y1 = config['visualization']['plot_bounds']['y_max'],
+                    num_samples=config['visualization']['num_plot_samples'],
+                    time_steps=config['visualization']['num_time_steps'],
+                    solver=config['visualization']['solver'],
+                    z=z_,
+                    num_contour_points=100
+                )
+                
+                # Log to WandB
+                wandb.log({
+                    'path_plot': wandb.Image(plt),
+                })
+                plt.savefig(os.path.join(figures_dir, f"path_plot_{i}.png"))
+                plt.close()
+
+                # For opinion dyanmics visualize the disimilarity
+                if config.get('opinion_dynamics',{}).get('active', False):
+                    plt.figure(figsize=(10, 10))
+                    disimilarity_snapshots(samples_path)
+                    # Log to WandB
+                    wandb.log({
+                        'dissimilarity_plot': wandb.Image(plt),
+                    })
+                plt.close()
+
+                checkpoint_path = os.path.join(checkpoints_dir, f"spline.pth")
+                torch.save({
+                    'direct_model': spline.state_dict(),
+                    'ema_model':ema.model.state_dict()},
+                    checkpoint_path
+                )
+
+                z_comp_bd = prior.sample((comp_bd,)).to(device= device)
+                samples_bd0 = torch.from_numpy(data_sets.inf_train_gen(config['data']['source']['name'],batch_size= comp_bd,dim= config['architecture']['input_dim'])).to(device)
+                samples_bd1 = torch.from_numpy(data_sets.inf_train_gen(config['data']['target']['name'],batch_size= comp_bd,dim = config['architecture']['input_dim'])).to(device)
+
+                bd0_generated = spline.push_forward(spline.x0.flatten(),z = z_comp_bd)
+                bd1_generated = spline.push_forward(spline.x1.flatten(),z=z_comp_bd)
+                
+                bd0_distance.append(loss(samples_bd0,bd0_generated).detach().cpu().item())
+                bd1_distance.append(loss(samples_bd1,bd1_generated).detach().cpu().item())
+
+
+
+
 
             # Path optimization
             print('Optimizing path...')
@@ -270,56 +341,8 @@ def run_experiments(config_path):
                     'Loss_fn bd1': bd1
                 })
                        
-            # Visualization and logging
-        
-            if i == 0 or i == config['optimization']['optimization_steps'][experiment] - 1 or (i + 1) % (config['optimization']['optimization_steps'][experiment] // 5) == 0:
-
-                s = torch.linspace(0, 1, 30).to(device)
-                interpolation = ema(s)
-                # Create and save visualization
-                plt.figure(figsize=(10, 10))
-                
-                samples_path = path_visualization_snapshots(
-                    interpolation=interpolation,
-                    arch=arch,
-                    spline=spline,
-                    x0 = config['visualization']['plot_bounds']['x_min'],
-                    y0 = config['visualization']['plot_bounds']['y_min'],
-                    x1 = config['visualization']['plot_bounds']['x_max'],
-                    y1 = config['visualization']['plot_bounds']['y_max'],
-                    num_samples=config['visualization']['num_plot_samples'],
-                    time_steps=config['visualization']['num_time_steps'],
-                    solver=config['visualization']['solver'],
-                    z=z_,
-                    num_contour_points=100
-                )
-                
-                # Log to WandB
-                wandb.log({
-                    'path_plot': wandb.Image(plt),
-                })
-                plt.savefig(os.path.join(figures_dir, f"path_plot_{i}.png"))
-                plt.close()
-
-                # For opinion dyanmics visualize the disimilarity
-                if config.get('opinion_dynamics',{}).get('active', False):
-                    plt.figure(figsize=(10, 10))
-                    disimilarity_snapshots(samples_path)
-                    # Log to WandB
-                    wandb.log({
-                        'dissimilarity_plot': wandb.Image(plt),
-                    })
-                plt.close()
-
-                checkpoint_path = os.path.join(checkpoints_dir, f"spline.pth")
-                torch.save({
-                    'direct_model': spline.state_dict(),
-                    'ema_model':ema.model.state_dict()},
-                    checkpoint_path
-                )
-
-        
-        plot_hist(lagrangian_history, potential_history, figures_dir)
+            
+        plot_hist(lagrangian_history, potential_history,bd0_distance,bd1_distance, figures_dir)
         wandb.finish()
 
 if __name__ == "__main__":
@@ -327,14 +350,16 @@ if __name__ == "__main__":
     Entry point for running the density path optimization experiment.
     Specify the configuration file to use for the experiment.
     """
-    # name_experiment  = 'configs_2D_gauss0_d_gauss1_d_SB.yaml'
+    name_experiment  = 'configs_2D_gauss0_d_gauss1_d_SB.yaml'
+    # name_experiment  = 'configs_2D_gauss0_d_gauss1_d_geo.yaml'
+    # name_experiment  = 'configs_10D_gauss0_d_gauss1_d_geo.yaml'
     # name_experiment  = 'configs_10D_gauss0_d_gauss1_d_SB.yaml'
+    # name_experiment  = 'configs_50D_gauss0_d_gauss1_d_geo.yaml'
     # name_experiment  = 'configs_50D_gauss0_d_gauss1_d_SB.yaml'
     # name_experiment  = 'configs_8gmm_half_std.yaml'
     # name_experiment  = 'configs_8gmm_4gmm.yaml'
-    # name_experiment  = 'configs_50D_gauss0_d_gauss1_d_Geo.yaml'
     # name_experiment  = 'configs_2D_vneck.yaml'
-    name_experiment  = 'configs_2D_scurve.yaml'
+    # name_experiment  = 'configs_2D_scurve.yaml'
     # name_experiment  = 'configs_opinion_2D.yaml'
     # name_experiment  = 'configs_opinion_1000D.yaml'
     dir_ = project_root / 'configs' / 'density_path_problems' / name_experiment
