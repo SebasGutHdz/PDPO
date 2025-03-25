@@ -1,0 +1,15 @@
+{"time":"2025-03-16T21:05:38.875269873-04:00","level":"INFO","msg":"stream: starting","core version":"0.19.8","symlink path":"/work2/Sebas/Parametric_Density_Path_Opt/Parametric_pushforward/wandb/run-20250316_210538-cpf3b2co/logs/debug-core.log"}
+{"time":"2025-03-16T21:05:38.989301788-04:00","level":"INFO","msg":"created new stream","id":"cpf3b2co"}
+{"time":"2025-03-16T21:05:38.989348568-04:00","level":"INFO","msg":"stream: started","id":"cpf3b2co"}
+{"time":"2025-03-16T21:05:38.989420789-04:00","level":"INFO","msg":"writer: Do: started","stream_id":"cpf3b2co"}
+{"time":"2025-03-16T21:05:38.989478019-04:00","level":"INFO","msg":"handler: started","stream_id":"cpf3b2co"}
+{"time":"2025-03-16T21:05:38.989543419-04:00","level":"INFO","msg":"sender: started","stream_id":"cpf3b2co"}
+{"time":"2025-03-16T21:05:39.168669632-04:00","level":"INFO","msg":"Starting system monitor"}
+{"time":"2025-03-16T21:05:40.464328058-04:00","level":"INFO","msg":"stream: closing","id":"cpf3b2co"}
+{"time":"2025-03-16T21:05:40.464390679-04:00","level":"INFO","msg":"Stopping system monitor"}
+{"time":"2025-03-16T21:05:40.465217744-04:00","level":"INFO","msg":"Stopped system monitor"}
+{"time":"2025-03-16T21:05:40.825486202-04:00","level":"INFO","msg":"fileTransfer: Close: file transfer manager closed"}
+{"time":"2025-03-16T21:05:40.998913196-04:00","level":"INFO","msg":"handler: closed","stream_id":"cpf3b2co"}
+{"time":"2025-03-16T21:05:40.999009927-04:00","level":"INFO","msg":"sender: closed","stream_id":"cpf3b2co"}
+{"time":"2025-03-16T21:05:40.999001457-04:00","level":"INFO","msg":"writer: Close: closed","stream_id":"cpf3b2co"}
+{"time":"2025-03-16T21:05:40.999170748-04:00","level":"INFO","msg":"stream: closed","id":"cpf3b2co"}

@@ -75,10 +75,11 @@ from interpolation import cubic_interp,dervi_cubic_interp
 from parametric_mlp import ParameterizedMLP,ParameterizedWrapper
 from odes_log_score import trajectory_log_likelihood_exact_rhs,trajectory_score_exact_rhs,trajectory_log_likelihood_score_exact_rhs
 
-from torchdyn.core import NeuralODE
+
 # parametric_oode_solvers modifies the definitions of the step integrators in odeint
 # ALWAYS CALL IT BEFORE.
 import parametric_ode_solvers
+from torchdyn.core import NeuralODE
 from torchdyn.numerics import odeint
 
 from tqdm import tqdm 
@@ -694,7 +695,7 @@ class Spline(torch.nn.Module):
         return z
 
 
-    def pull_back(self, theta, x, t_node=20):
+    def pull_back(self, theta, x, t_node=10):
         '''
         Pulls samples backward through a neural ODE with given parameters.
         

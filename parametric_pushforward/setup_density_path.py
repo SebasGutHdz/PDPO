@@ -1,8 +1,12 @@
+from pathlib import Path
+path_root = Path(__file__).parent.parent.absolute()
+
+
 import torch
 from torch.distributions import MultivariateNormal
 import torch.nn.functional as F
 
-from obstacles import obstacle_cost_stunnel, obstacle_cost_vneck, obstacle_cost_gmm,congestion_cost,geodesic,quadartic_well
+from parametric_pushforward.obstacles import obstacle_cost_stunnel, obstacle_cost_vneck, obstacle_cost_gmm,congestion_cost,geodesic,quadartic_well
 
 import numpy as np
 import os
@@ -61,7 +65,7 @@ def setup_prior(config,device):
 def get_activation(name):
     '''Get Activation function by name'''
     activations = {
-        'softplus': F.relu,
+        'softplus': F.softplus,
         'relu': F.relu,
         'tanh': F.tanh,
         'sin': lambda x: torch.sin(x)

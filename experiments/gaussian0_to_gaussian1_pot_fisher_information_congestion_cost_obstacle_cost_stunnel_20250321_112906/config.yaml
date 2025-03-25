@@ -1,0 +1,94 @@
+architecture:
+  activation: softplus
+  hidden_dim: 128
+  input_dim: 2
+  num_layers: 4
+  time_varying: true
+coefficients_potentials:
+  sigma: 1.0
+  weight_interaction: 50
+  weight_obstacle: 1500
+data:
+  model_dir: /models/
+  source:
+    checkpoint: final
+    name: gaussian0
+  target:
+    checkpoint: final
+    name: gaussian1
+device: cuda:2
+ema:
+  beta: 0.99
+  update_after_step: 10
+  update_every: 10
+experiment_seed: 0
+optimization:
+  batch_size: 1000
+  coupling:
+    learning_rate: 0.001
+    scheduler:
+      gamma: 0.1
+      step_size: 500
+    steps:
+    - 20
+    weight_decay: 0.001
+  geodesic_warmup: true
+  geodesic_warmup_steps: 100
+  num_samples: 1000
+  optimization_steps:
+  - 20
+  path:
+    learning_rate: 0.001
+    scheduler:
+      gamma: 0.1
+      step_size: 500
+    steps:
+    - 20
+  t_node: 10
+  weight_boundary: 1000
+potential_functions:
+- fisher_information
+- congestion_cost
+- obstacle_cost_stunnel
+prior:
+  dimension: 2
+  type: gaussian
+spline:
+  det_time: 1
+  num_collocation: 5
+  t_partition: 25
+  type: cubic
+trace_estimator: exact
+visualization:
+  num_plot_samples: 1000
+  num_time_steps: 10
+  plot_bounds:
+    x_max: 15.0
+    x_min: -15.0
+    y_max: 15.0
+    y_min: -15
+  solver: midpoint
+wandb:
+  entity: sebas_g
+  group: density_path_experiments
+  logging:
+    metrics:
+      boundary_loss: boundary_loss
+      coupling_loss: coupling_loss
+      lagrangian: lagrangian_value
+      path_loss: path_loss
+      total_loss: total_loss
+    model:
+      ema_checkpoint: ema_checkpoint
+      spline_checkpoint: spline_checkpoint
+    plots:
+      loss_curve: loss_history
+      path_visualization: path_plot
+      potential_visualization: potential_plot
+    run_info:
+      coupling_step: coupling_phase
+      iteration: current_iteration
+      learning_rate: current_lr
+      optimization_phase: optimization_type
+  project: Parametric Density Path Optimization
+  run_name: ${data.source.name}_to_${data.target.name}_pot_${potential_functions}

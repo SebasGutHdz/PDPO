@@ -1,0 +1,19 @@
+Traceback (most recent call last):
+  File "/work2/Sebas/Parametric_Density_Path_Opt/Parametric_pushforward/density_path_optimization.py", line 341, in <module>
+    run_experiments(dir_)
+  File "/work2/Sebas/Parametric_Density_Path_Opt/Parametric_pushforward/density_path_optimization.py", line 134, in run_experiments
+    state0, state1 = load_boundary_models(config, device)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/work2/Sebas/Parametric_Density_Path_Opt/Parametric_pushforward/parametric_pushforward/setup_density_path_problem.py", line 41, in load_boundary_models
+    bd0_parameter = torch.load(bd0_path,map_location=device)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/work2/Sebas/conda_envs/PDPO/lib/python3.12/site-packages/torch/serialization.py", line 1425, in load
+    with _open_file_like(f, "rb") as opened_file:
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/work2/Sebas/conda_envs/PDPO/lib/python3.12/site-packages/torch/serialization.py", line 751, in _open_file_like
+    return _open_file(name_or_buffer, mode)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/work2/Sebas/conda_envs/PDPO/lib/python3.12/site-packages/torch/serialization.py", line 732, in __init__
+    super().__init__(open(name, mode))
+                     ^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/models/gaussian0[2,128,4,sin]/final.pth'

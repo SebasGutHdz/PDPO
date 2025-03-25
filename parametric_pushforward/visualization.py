@@ -18,15 +18,15 @@ from matplotlib.animation import FuncAnimation
 
 import numpy as np
 
-import data_sets as toy_data
+import parametric_pushforward.data_sets as toy_data
 
 from reference_solutions.gaussian_solutions import monge_map
 
-from parametric_mlp import ParameterizedMLP,ParameterizedWrapper
+from parametric_pushforward.parametric_mlp import ParameterizedMLP,ParameterizedWrapper
 
-from opinion import est_directional_similarity
+from parametric_pushforward.opinion import est_directional_similarity
 
-import parametric_ode_solvers
+import parametric_pushforward.parametric_ode_solvers
 from torchdyn.core import NeuralODE
 
 from sklearn.decomposition import PCA
@@ -36,6 +36,8 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 import seaborn as sns
 
+
+from IPython.display import HTML
 
 
 def display_bds(spline,n_points = 1000,device = 'cuda:0',time_steps= 10):
@@ -55,8 +57,8 @@ def display_bds(spline,n_points = 1000,device = 'cuda:0',time_steps= 10):
     theta0  = spline.x0[0][0]
     theta1 = spline.x1[0][0]
     
-    z0 = spline.pushforward(theta0,z)
-    z1 = spline.pushforward(theta1,z)
+    z0 = spline.push_forward(theta0,z).detach().cpu()
+    z1 = spline.push_forward(theta1,z).detach().cpu()
 
     plt.scatter(z0[:,0],z0[:,1],c = 'r',s =1,label = 'Initial')
     plt.scatter(z1[:,0],z1[:,1],c = 'b',s =1,label = 'Terminal')
@@ -165,7 +167,6 @@ def path_visualization(interpolation, arch, spline, x0, y0, x1, y1,
     # For each time step, compute the sample trajectory
     for i in range(s):
         theta = interpolation[:, i, :].squeeze()
-    
         samples = spline.push_forward(theta,z,t_node = time_steps)
         samples_path[:, i, :] = samples.detach().cpu() #[-1, :, :]
     
@@ -174,7 +175,7 @@ def path_visualization(interpolation, arch, spline, x0, y0, x1, y1,
     custom_cmap = LinearSegmentedColormap.from_list('cool', colors)
     
     # Create visualization with potential function
-    plt.figure(figsize=(12, 10))
+    fig,ax = plt.subplots(figsize=(12, 10))
     
     # First plot the potential function
     X, Y = torch.meshgrid(
@@ -233,7 +234,8 @@ def path_visualization(interpolation, arch, spline, x0, y0, x1, y1,
     # Add a colorbar for the trajectories
     sm = plt.cm.ScalarMappable(cmap=custom_cmap, norm=plt.Normalize(0, 1))
     sm.set_array([])
-    cbar_traj = plt.colorbar(sm, label='Time (t)')
+    
+    cbar_traj = plt.colorbar(sm, ax= ax, label='Time (t)')
     cbar_traj.set_ticks(np.linspace(0, 1, 5))
     cbar_traj.set_ticklabels([f'{t:.2f}' for t in np.linspace(0, 1, 5)])
         
@@ -474,7 +476,7 @@ def path_visualization_with_trajectories(interpolation, arch, spline, x0, y0, x1
     custom_cmap = LinearSegmentedColormap.from_list('cool', colors)
     
     # Create visualization with potential function
-    plt.figure(figsize=(12, 10))
+    fig,ax = plt.subplots(figsize=(12, 10))
     
     # Compute potential field
     X, Y = torch.meshgrid(
@@ -504,12 +506,12 @@ def path_visualization_with_trajectories(interpolation, arch, spline, x0, y0, x1
     # If showing trajectories, plot lines connecting samples across time
     if show_trajectories:
         # Select a smaller subset of particles to show trajectories for
-        trajectory_indices = np.random.choice(num_samples, size=min(150, num_samples), replace=False)
+        trajectory_indices = np.random.choice(num_samples, size=min(100, num_samples), replace=False)
         for idx in trajectory_indices:
             plt.plot(
                 samples_path[idx, :, idx_x].cpu().numpy(),
                 samples_path[idx, :, idx_y].cpu().numpy(),
-                '-', linewidth=0.5, alpha=0.9, color='gray'
+                '-', linewidth=0.5, alpha=0.6, color='gray'
             )
     
     # Plot the sample distributions at each time step
@@ -536,7 +538,7 @@ def path_visualization_with_trajectories(interpolation, arch, spline, x0, y0, x1
     # Add a colorbar for the trajectories
     sm = plt.cm.ScalarMappable(cmap=custom_cmap, norm=plt.Normalize(0, 1))
     sm.set_array([])
-    cbar_traj = plt.colorbar(sm, label='Time (t)')
+    cbar_traj = plt.colorbar(sm,ax = ax, label='Time (t)')
     cbar_traj.set_ticks(np.linspace(0, 1, 5))
     cbar_traj.set_ticklabels([f'{t:.2f}' for t in np.linspace(0, 1, 5)])
     
@@ -645,7 +647,7 @@ class TrajectoryVisualizer:
         return fig
     
 
-def plot_hist(lagrangian_history, potential_history, figures_dir):
+def plot_hist(lagrangian_history, potential_history,bd0_distance,bd1_distance, figures_dir):
     """Plot the history of the Lagrangian during optimization."""
     sns.set_theme(style="darkgrid")
 
@@ -713,6 +715,84 @@ def plot_hist(lagrangian_history, potential_history, figures_dir):
     plt.savefig(os.path.join(figures_dir, "potential_history.png"), dpi=300)
     plt.close()
 
+    # Plot accuracy of representation of boundary conditions
+    opt_steps = len(lagrangian_data)
+
+    plt.figure(figsize=(12, 6))
+    sns.lineplot(x=np.linspace(0, opt_steps, len(bd0_distance)), y=np.array(bd0_distance), label='Source Distribution', linewidth=2)
+    sns.lineplot(x=np.linspace(0, opt_steps, len(bd1_distance)), y=np.array(bd1_distance), label='Target Distribution', linewidth=2)
+    plt.title('Boundary Condition Accuracy During Optimization', fontsize=16)
+    plt.xlabel('Iteration', fontsize=14)
+    plt.ylabel('Distance', fontsize=14)
+    plt.legend(fontsize=12)
+    plt.tight_layout()
+    plt.savefig(os.path.join(figures_dir, "boundary_accuracy.png"), dpi=300)
+    plt.close()
+    
 
 
+def plot_pot(spline,x0,y0,x1,y1,num_points=1000):
+    '''
+    Input:
+        spline: torch.nn.Module
+        x0: float
+        y0: float
+        x1: float
+        y1: float
+        num_points: int
+    Output:
+        None
+    '''
+
+    X,Y = torch.meshgrid(torch.linspace(x0,x1,num_points),torch.linspace(y0,y1,num_points))
+    xy = torch.stack([X,Y],dim = -1)
+    if spline.potential is None:
+        cost = torch.zeros_like(X)
+    else:
+        # cost = spline.potential(xy)
+        cost = spline.potential[0](xy)
+        for i in range(1,len(spline.potential)):
+            cost += spline.potential[i](xy)
+    
+    plt.contourf(X,Y,cost,levels = 100,alpha = 0.5)
+
+    # plt.show()
+
+    return 
+
+
+def create_particle_animation(spline,samples_path,x0,x1,y0,y1, interval=50):
+        """
+        Creates an animation of particles evolving over time.
+        
+        Args:
+            samples_path: tensor of shape (timesteps, num_particles, 2) containing particle positions
+            interval: time in milliseconds between frames
+        
+        Returns:
+            HTML animation object
+        """
+        
+        fig, ax = plt.subplots(figsize=(8, 8))
+        plot_pot(spline,x0,y0,x1,y1,100)
+        scatter = ax.scatter(samples_path[0, :, 0], samples_path[0, :, 1], s=1)
+        
+        ax.set_xlim([samples_path[:, :, 0].min(), samples_path[:, :, 0].max()])#samples_path[:, :, 0].min(), samples_path[:, :, 0].max()
+        ax.set_ylim([samples_path[:, :, 1].min(), samples_path[:, :, 1].max()])#samples_path[:, :, 1].min(), samples_path[:, :, 1].max()
+        
+        # Create a colormap
+        cmap = plt.get_cmap('autumn')
+        norm = plt.Normalize(vmin=0, vmax=len(samples_path))
+
+        def update(frame):
+            colors = cmap(norm(frame))
+            scatter.set_offsets(samples_path[frame, :, :2])
+            scatter.set_color(colors)
+            return scatter,
+        
+        anim = FuncAnimation(fig, update, frames=len(samples_path), 
+                            interval=interval, blit=True)
+        plt.close()
+        
+        return HTML(anim.to_jshtml())
 

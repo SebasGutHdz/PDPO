@@ -71,7 +71,7 @@ def setup_prior(config,device):
 def get_activation(name):
     '''Get Activation function by name'''
     activations = {
-        'softplus': F.relu,
+        'softplus': F.softplus,
         'relu': F.relu,
         'tanh': F.tanh,
         'sin': lambda x: torch.sin(x)

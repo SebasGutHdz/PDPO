@@ -1,0 +1,16 @@
+data:
+  total_data: 15000
+  type: 8gaussiansv3
+model:
+  activation_fn: softplus
+  hidden_dim: 64
+  input_dim: 2
+  num_layers: 6
+  time_varying: true
+training:
+  batch_size: 3000
+  checkpoint_dir: models/
+  device: cuda:3
+  learning_rate: 0.001
+  n_epochs: 6000
+  save_interval: 1000

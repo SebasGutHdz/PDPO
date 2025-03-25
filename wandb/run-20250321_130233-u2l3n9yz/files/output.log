@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "/work2/Sebas/Parametric_Density_Path_Opt/Parametric_pushforward/density_path_optimization.py", line 342, in <module>
+    run_experiments(str(dir_))
+  File "/work2/Sebas/Parametric_Density_Path_Opt/Parametric_pushforward/density_path_optimization.py", line 113, in run_experiments
+    initialize_experiment(config['experiment_seed'])
+                          ~~~~~~^^^^^^^^^^^^^^^^^^^
+KeyError: 'experiment_seed'

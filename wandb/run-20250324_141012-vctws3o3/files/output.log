@@ -1,0 +1,47 @@
+Experiment 1
+/work2/Sebas/conda_envs/PDPO/lib/python3.12/site-packages/torchdyn/numerics/odeint.py:83: UserWarning: Setting tolerances has no effect on fixed-step methods
+  warn("Setting tolerances has no effect on fixed-step methods")
+/work2/Sebas/Parametric_Density_Path_Opt/Parametric_pushforward/parametric_pushforward/visualization.py:416: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  plt.tight_layout(rect=[0, 0.07, 0.9, 0.95])
+/work2/Sebas/conda_envs/PDPO/lib/python3.12/site-packages/torchdyn/numerics/odeint.py:83: UserWarning: Setting tolerances has no effect on fixed-step methods
+  warn("Setting tolerances has no effect on fixed-step methods")
+Optimizing path...
+Path_opt: 21.1973819732666,ke:21.1973819732666,pe:0.0: 100%|█████████████████████████████████████████████████████████████| 20/20 [00:05<00:00,  3.83it/s]
+Optimizing coupling...
+Bd_0: 10906.9541015625,bd_1:11107.314453125,lagrangian:21.014141082763672: 100%|█████████████████████████████████████████| 20/20 [00:05<00:00,  3.88it/s]
+/work2/Sebas/Parametric_Density_Path_Opt/Parametric_pushforward/parametric_pushforward/visualization.py:416: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  plt.tight_layout(rect=[0, 0.07, 0.9, 0.95])
+/work2/Sebas/conda_envs/PDPO/lib/python3.12/site-packages/torchdyn/numerics/odeint.py:83: UserWarning: Setting tolerances has no effect on fixed-step methods
+  warn("Setting tolerances has no effect on fixed-step methods")
+Optimizing path...
+Path_opt: 20.43238067626953,ke:20.43238067626953,pe:0.0: 100%|███████████████████████████████████████████████████████████| 20/20 [00:05<00:00,  3.94it/s]
+Optimizing coupling...
+Bd_0: 11132.001953125,bd_1:10995.0390625,lagrangian:20.278823852539062: 100%|████████████████████████████████████████████| 20/20 [00:05<00:00,  3.89it/s]
+/work2/Sebas/Parametric_Density_Path_Opt/Parametric_pushforward/parametric_pushforward/visualization.py:416: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  plt.tight_layout(rect=[0, 0.07, 0.9, 0.95])
+/work2/Sebas/conda_envs/PDPO/lib/python3.12/site-packages/torchdyn/numerics/odeint.py:83: UserWarning: Setting tolerances has no effect on fixed-step methods
+  warn("Setting tolerances has no effect on fixed-step methods")
+Optimizing path...
+Path_opt: 19.94098663330078,ke:19.94098663330078,pe:0.0: 100%|███████████████████████████████████████████████████████████| 20/20 [00:05<00:00,  3.94it/s]
+Optimizing coupling...
+Bd_0: 11191.76171875,bd_1:11090.0146484375,lagrangian:20.110061645507812: 100%|██████████████████████████████████████████| 20/20 [00:05<00:00,  3.73it/s]
+/work2/Sebas/Parametric_Density_Path_Opt/Parametric_pushforward/parametric_pushforward/visualization.py:416: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  plt.tight_layout(rect=[0, 0.07, 0.9, 0.95])
+/work2/Sebas/conda_envs/PDPO/lib/python3.12/site-packages/torchdyn/numerics/odeint.py:83: UserWarning: Setting tolerances has no effect on fixed-step methods
+  warn("Setting tolerances has no effect on fixed-step methods")
+Optimizing path...
+Path_opt: 19.98946762084961,ke:19.98946762084961,pe:0.0: 100%|███████████████████████████████████████████████████████████| 20/20 [00:05<00:00,  3.95it/s]
+Optimizing coupling...
+Bd_0: 11306.01953125,bd_1:11186.025390625,lagrangian:19.959762573242188: 100%|███████████████████████████████████████████| 20/20 [00:05<00:00,  3.90it/s]
+/work2/Sebas/Parametric_Density_Path_Opt/Parametric_pushforward/parametric_pushforward/visualization.py:416: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  plt.tight_layout(rect=[0, 0.07, 0.9, 0.95])
+/work2/Sebas/conda_envs/PDPO/lib/python3.12/site-packages/torchdyn/numerics/odeint.py:83: UserWarning: Setting tolerances has no effect on fixed-step methods
+  warn("Setting tolerances has no effect on fixed-step methods")
+Optimizing path...
+Path_opt: 19.90699005126953,ke:19.90699005126953,pe:0.0: 100%|███████████████████████████████████████████████████████████| 20/20 [00:05<00:00,  3.94it/s]
+Optimizing coupling...
+Bd_0: 11032.787109375,bd_1:11058.3935546875,lagrangian:19.842803955078125: 100%|█████████████████████████████████████████| 20/20 [00:05<00:00,  3.75it/s]
+[0.7223794460296631, 0.7162957191467285, 0.7202950716018677, 0.7263458967208862, 0.7157487273216248]
+Lagrangian history type: <class 'list'>
+First element type: <class 'list'>, shape: no shape
+[ 0  5 10 15 20 25 30 35 40 45 50 55 60 65 70 75 80 85 90 95] 5

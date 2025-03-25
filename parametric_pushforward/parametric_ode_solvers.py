@@ -34,6 +34,7 @@ class Parametric_Midpoint(SolverTemplate):
         self.stepping_class = 'fixed'
 
     def step(self, f, x, t, dt, k1=None, args=None):
+        
         # Pass args to the function f
         if k1 == None: k1 = f(t, x,*args)
         x_mid = x + 0.5 * dt * k1

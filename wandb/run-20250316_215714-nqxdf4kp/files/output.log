@@ -1,0 +1,14 @@
+/work2/Sebas/conda_envs/PDPO/lib/python3.12/site-packages/torchdyn/numerics/odeint.py:83: UserWarning: Setting tolerances has no effect on fixed-step methods
+  warn("Setting tolerances has no effect on fixed-step methods")
+Experiment 1
+Optimizing path...
+Path_opt: 1052.99267578125,ke:821.7274780273438,pe:231.26516723632812: 100%|█████████████████████████████████████████████████████| 20/20 [00:07<00:00,  2.84it/s]
+Optimizing coupling...
+Bd_0: 2254.941650390625,bd_1:2211.092041015625,lagrangian:1032.948974609375: 100%|███████████████████████████████████████████████| 20/20 [00:06<00:00,  2.86it/s]
+Traceback (most recent call last):
+  File "/work2/Sebas/Parametric_Density_Path_Opt/Parametric_pushforward/density_path_optimization.py", line 341, in <module>
+    run_experiments(str(dir_))
+  File "/work2/Sebas/Parametric_Density_Path_Opt/Parametric_pushforward/density_path_optimization.py", line 265, in run_experiments
+    bd0_history.append(outputs['bd0'])
+                       ~~~~~~~^^^^^^^
+KeyError: 'bd0'

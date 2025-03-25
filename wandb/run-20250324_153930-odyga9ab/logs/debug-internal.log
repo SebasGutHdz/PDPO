@@ -1,0 +1,16 @@
+{"time":"2025-03-24T15:39:30.040401398-04:00","level":"INFO","msg":"stream: starting","core version":"0.19.8","symlink path":"/work2/Sebas/Parametric_Density_Path_Opt/Parametric_pushforward/wandb/run-20250324_153930-odyga9ab/logs/debug-core.log"}
+{"time":"2025-03-24T15:39:30.155266645-04:00","level":"INFO","msg":"created new stream","id":"odyga9ab"}
+{"time":"2025-03-24T15:39:30.155323786-04:00","level":"INFO","msg":"stream: started","id":"odyga9ab"}
+{"time":"2025-03-24T15:39:30.155426066-04:00","level":"INFO","msg":"writer: Do: started","stream_id":"odyga9ab"}
+{"time":"2025-03-24T15:39:30.155449667-04:00","level":"INFO","msg":"handler: started","stream_id":"odyga9ab"}
+{"time":"2025-03-24T15:39:30.155623568-04:00","level":"INFO","msg":"sender: started","stream_id":"odyga9ab"}
+{"time":"2025-03-24T15:39:30.393190386-04:00","level":"INFO","msg":"Starting system monitor"}
+{"time":"2025-03-24T15:50:27.560191825-04:00","level":"INFO","msg":"Stopping system monitor"}
+{"time":"2025-03-24T15:50:27.561095751-04:00","level":"INFO","msg":"Stopped system monitor"}
+{"time":"2025-03-24T15:50:27.984153779-04:00","level":"INFO","msg":"fileTransfer: Close: file transfer manager closed"}
+{"time":"2025-03-24T15:50:28.065933859-04:00","level":"INFO","msg":"handler: operation stats","stats":{}}
+{"time":"2025-03-24T15:50:28.069664614-04:00","level":"INFO","msg":"stream: closing","id":"odyga9ab"}
+{"time":"2025-03-24T15:50:28.069715094-04:00","level":"INFO","msg":"handler: closed","stream_id":"odyga9ab"}
+{"time":"2025-03-24T15:50:28.069731925-04:00","level":"INFO","msg":"writer: Close: closed","stream_id":"odyga9ab"}
+{"time":"2025-03-24T15:50:28.069739545-04:00","level":"INFO","msg":"sender: closed","stream_id":"odyga9ab"}
+{"time":"2025-03-24T15:50:28.069848205-04:00","level":"INFO","msg":"stream: closed","id":"odyga9ab"}

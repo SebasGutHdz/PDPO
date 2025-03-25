@@ -1,0 +1,133 @@
+_wandb:
+    value:
+        cli_version: 0.19.8
+        m: []
+        python_version: 3.12.9
+        t:
+            "1":
+                - 1
+                - 5
+                - 9
+                - 53
+                - 55
+                - 103
+            "2":
+                - 1
+                - 5
+                - 9
+                - 53
+                - 55
+                - 103
+            "3":
+                - 13
+                - 16
+                - 23
+                - 55
+            "4": 3.12.9
+            "5": 0.19.8
+            "8":
+                - 5
+            "12": 0.19.8
+            "13": linux-x86_64
+architecture:
+    value:
+        activation: softplus
+        hidden_dim: 128
+        input_dim: 2
+        num_layers: 4
+        time_varying: true
+coefficients_potentials:
+    value:
+        sigma: 2
+        weight_interaction: 50
+        weight_obstacle: 1500
+data:
+    value:
+        model_dir: models/
+        source:
+            checkpoint: final
+            name: gaussian0_d
+        target:
+            checkpoint: final
+            name: gaussian1_d
+device:
+    value: cuda:0
+ema:
+    value:
+        beta: 0.99
+        update_after_step: 10
+        update_every: 10
+optimization:
+    value:
+        batch_size: 1000
+        coupling:
+            learning_rate: 0.0001
+            scheduler:
+                gamma: 0.9
+                step_size: 100
+                type: StepLR
+            steps:
+                - 20
+            weight_decay: 0.0001
+        geodesic_warmup: false
+        geodesic_warmup_steps: 500
+        num_samples: 1000
+        optimization_steps:
+            - 15
+        path:
+            learning_rate: 0.001
+            scheduler:
+                gamma: 0.1
+                step_size: 100
+            steps:
+                - 20
+        t_node: 10
+        weight_boundary: 1000
+potential_functions:
+    value:
+        - geodesic
+prior:
+    value:
+        dimension: 2
+        type: gaussian
+spline:
+    value:
+        det_time: 1
+        num_collocation: 5
+        t_partition: 20
+        type: cubic
+visualization:
+    value:
+        num_plot_samples: 1000
+        num_time_steps: 10
+        plot_bounds:
+            x_max: 6
+            x_min: -6
+            y_max: 6
+            y_min: -6
+        solver: midpoint
+wandb:
+    value:
+        entity: sebas_g
+        group: density_path_experiments
+        logging:
+            metrics:
+                boundary_loss: boundary_loss
+                coupling_loss: coupling_loss
+                lagrangian: lagrangian_value
+                path_loss: path_loss
+                total_loss: total_loss
+            model:
+                ema_checkpoint: ema_checkpoint
+                spline_checkpoint: spline_checkpoint
+            plots:
+                loss_curve: loss_history
+                path_visualization: path_plot
+                potential_visualization: potential_plot
+            run_info:
+                coupling_step: coupling_phase
+                iteration: current_iteration
+                learning_rate: current_lr
+                optimization_phase: optimization_type
+        project: Parametric Density Path Optimization
+        run_name: ${data.source.name}_to_${data.target.name}_pot_${potential_functions}

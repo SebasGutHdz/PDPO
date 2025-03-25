@@ -1,7 +1,7 @@
 '''
 Flow Matching Training Implementation
 
-This module implements training for flow matching, a method for learning continuous normalizing flows.
+This module implements training for flow matching, a method for learning NODEs.
 Flow matching directly learns the velocity field of a continuous-time transformation between
 distributions by minimizing the L2 distance between the predicted and target velocities.
 
@@ -59,9 +59,8 @@ class Config:
     Configuration manager that handles model setup, data loading, and training parameters.
     Loads settings from a YAML file and provides methods for initialization.
     '''
-    def __init__(self,config_path: str | Path)-> None:
+    def __init__(self, config_path: str | Path) -> None:
         try:
-            
             with open(config_path,'r') as f:
                 self.config = yaml.safe_load(f)
         except FileNotFoundError:
@@ -75,8 +74,13 @@ class Config:
         '''
         model_config = self.config['model']
         activation_fn = ACTIVATION_FNS[model_config['activation_fn']]
-        arch = [model_config['input_dim'],model_config['hidden_dim'],model_config['num_layers'],activation_fn]
-        model = MLP(arch,time_varying=model_config['time_varying']).to(self.config['training']['device'])
+        arch = [model_config['input_dim'],
+                model_config['hidden_dim'],
+                model_config['num_layers'],
+                activation_fn]
+        model = MLP(arch, time_varying=model_config['time_varying']).to(self.config['training']['device'])
+        
+        
         return model
     
     def get_data_set(self):
@@ -102,6 +106,7 @@ class Config:
         '''
         lr = self.config['training']['learning_rate']
         optimizer = torch.optim.Adam(model.parameters(),lr=lr)
+        # scheduler = torch.optim.lr_scheduler.StepLR(optimizer=optimizer)
         return optimizer
     
     def save_checkpoint(self,model,optimizer,epoch,loss,path):
@@ -145,13 +150,15 @@ def loss_flow_matching(
     Returns:
         loss: Average L2 distance between predicted and target velocities
     '''
+    batch_size = data_set.shape[0]
     # Sample from prior distribution
     z = torch.randn(batch_size,dim).to(device)
     
     # Sample interpolation time and compute intermediate points
     t = torch.rand(batch_size).to(device)
+    
     zt = data_set*t[:,None] + (1-t[:,None])*z  # Linear interpolation
-    xt = torch.randn(batch_size,dim).to(device) + zt  # Add noise
+    xt = torch.randn(batch_size,dim).to(device)*0.1 + zt  # Add noise
     
     # Compute target velocity (straight line to target)
     ut = data_set-z
@@ -196,10 +203,13 @@ def train_flow_matching(config_path):
         # Batch training
         for batch in dataloader:
             optimizer.zero_grad()
-            loss = loss_flow_matching(model,batch[0],device,
+            loss = loss_flow_matching(model, batch[0], device,
                                     batch_size=cfg.config['training']['batch_size'],
                                     dim=cfg.config['model']['input_dim'])
             loss.backward()
+            
+            
+            
             optimizer.step()
             num_batches += 1
             total_loss += loss.item()

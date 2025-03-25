@@ -1,0 +1,97 @@
+/work2/Sebas/conda_envs/PDPO/lib/python3.12/site-packages/torchdyn/numerics/odeint.py:83: UserWarning: Setting tolerances has no effect on fixed-step methods
+  warn("Setting tolerances has no effect on fixed-step methods")
+Experiment 1
+Optimizing path...
+Path_opt: 1444.95654296875,ke:1088.4859619140625,pe:356.4705505371094: 100%|█████████████████████████████████████████████████████| 20/20 [00:07<00:00,  2.85it/s]
+Optimizing coupling...
+Bd_0: 2197.046630859375,bd_1:2260.58203125,lagrangian:1319.787841796875: 100%|███████████████████████████████████████████████████| 20/20 [00:06<00:00,  2.96it/s]
+/work2/Sebas/Parametric_Density_Path_Opt/Parametric_pushforward/parametric_pushforward/visualization.py:416: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  plt.tight_layout(rect=[0, 0.07, 0.9, 0.95])
+Optimizing path...
+  0%|                                                                                                                                     | 0/20 [00:00<?, ?it/s]/work2/Sebas/conda_envs/PDPO/lib/python3.12/site-packages/torchdyn/numerics/odeint.py:83: UserWarning: Setting tolerances has no effect on fixed-step methods
+  warn("Setting tolerances has no effect on fixed-step methods")
+Path_opt: 759.0819091796875,ke:657.4130249023438,pe:101.66889190673828: 100%|████████████████████████████████████████████████████| 20/20 [00:06<00:00,  2.98it/s]
+Optimizing coupling...
+Bd_0: 2275.816650390625,bd_1:2295.4267578125,lagrangian:743.4868774414062: 100%|█████████████████████████████████████████████████| 20/20 [00:06<00:00,  2.96it/s]
+Optimizing path...
+Path_opt: 640.7169189453125,ke:524.192626953125,pe:116.52432250976562: 100%|█████████████████████████████████████████████████████| 20/20 [00:06<00:00,  2.99it/s]
+Optimizing coupling...
+Bd_0: 2261.81396484375,bd_1:2302.1201171875,lagrangian:642.3497924804688: 100%|██████████████████████████████████████████████████| 20/20 [00:06<00:00,  2.88it/s]
+Optimizing path...
+Path_opt: 613.7616577148438,ke:498.2381591796875,pe:115.52351379394531: 100%|████████████████████████████████████████████████████| 20/20 [00:06<00:00,  3.00it/s]
+Optimizing coupling...
+Bd_0: 2360.917236328125,bd_1:2196.306640625,lagrangian:608.109130859375: 100%|███████████████████████████████████████████████████| 20/20 [00:06<00:00,  2.96it/s]
+/work2/Sebas/Parametric_Density_Path_Opt/Parametric_pushforward/parametric_pushforward/visualization.py:416: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  plt.tight_layout(rect=[0, 0.07, 0.9, 0.95])
+Optimizing path...
+  0%|                                                                                                                                     | 0/20 [00:00<?, ?it/s]/work2/Sebas/conda_envs/PDPO/lib/python3.12/site-packages/torchdyn/numerics/odeint.py:83: UserWarning: Setting tolerances has no effect on fixed-step methods
+  warn("Setting tolerances has no effect on fixed-step methods")
+Path_opt: 596.3720092773438,ke:481.5531921386719,pe:114.81880950927734: 100%|████████████████████████████████████████████████████| 20/20 [00:06<00:00,  2.99it/s]
+Optimizing coupling...
+Bd_0: 2286.452880859375,bd_1:2191.418701171875,lagrangian:596.579345703125: 100%|████████████████████████████████████████████████| 20/20 [00:06<00:00,  2.96it/s]
+Optimizing path...
+Path_opt: 586.7420654296875,ke:471.1619873046875,pe:115.58004760742188: 100%|████████████████████████████████████████████████████| 20/20 [00:06<00:00,  2.91it/s]
+Optimizing coupling...
+Bd_0: 2233.750244140625,bd_1:2223.680908203125,lagrangian:582.1474609375: 100%|██████████████████████████████████████████████████| 20/20 [00:06<00:00,  2.95it/s]
+Optimizing path...
+Path_opt: 579.93798828125,ke:466.7147216796875,pe:113.22325134277344: 100%|██████████████████████████████████████████████████████| 20/20 [00:06<00:00,  2.99it/s]
+Optimizing coupling...
+Bd_0: 2184.404296875,bd_1:2265.925048828125,lagrangian:579.9283447265625: 100%|██████████████████████████████████████████████████| 20/20 [00:06<00:00,  2.96it/s]
+Optimizing path...
+Path_opt: 577.0841064453125,ke:463.5777587890625,pe:113.5063705444336: 100%|█████████████████████████████████████████████████████| 20/20 [00:06<00:00,  2.99it/s]
+Optimizing coupling...
+Bd_0: 2259.955078125,bd_1:2207.82421875,lagrangian:576.8289794921875: 100%|██████████████████████████████████████████████████████| 20/20 [00:06<00:00,  2.96it/s]
+/work2/Sebas/Parametric_Density_Path_Opt/Parametric_pushforward/parametric_pushforward/visualization.py:416: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  plt.tight_layout(rect=[0, 0.07, 0.9, 0.95])
+Optimizing path...
+  0%|                                                                                                                                     | 0/20 [00:00<?, ?it/s]/work2/Sebas/conda_envs/PDPO/lib/python3.12/site-packages/torchdyn/numerics/odeint.py:83: UserWarning: Setting tolerances has no effect on fixed-step methods
+  warn("Setting tolerances has no effect on fixed-step methods")
+Path_opt: 582.60791015625,ke:466.80120849609375,pe:115.80667877197266: 100%|█████████████████████████████████████████████████████| 20/20 [00:06<00:00,  2.92it/s]
+Optimizing coupling...
+Bd_0: 2245.288818359375,bd_1:2168.101318359375,lagrangian:579.72607421875: 100%|█████████████████████████████████████████████████| 20/20 [00:06<00:00,  2.96it/s]
+Optimizing path...
+Path_opt: 579.0396118164062,ke:466.5201721191406,pe:112.51942443847656: 100%|████████████████████████████████████████████████████| 20/20 [00:06<00:00,  2.99it/s]
+Optimizing coupling...
+Bd_0: 2207.948486328125,bd_1:2285.1533203125,lagrangian:575.5390625: 100%|███████████████████████████████████████████████████████| 20/20 [00:06<00:00,  2.96it/s]
+Optimizing path...
+Path_opt: 559.0953369140625,ke:451.9006652832031,pe:107.19464111328125: 100%|████████████████████████████████████████████████████| 20/20 [00:06<00:00,  2.99it/s]
+Optimizing coupling...
+Bd_0: 2318.232421875,bd_1:2225.233642578125,lagrangian:557.0126953125: 100%|█████████████████████████████████████████████████████| 20/20 [00:06<00:00,  2.96it/s]
+Optimizing path...
+Path_opt: 548.4976806640625,ke:437.29400634765625,pe:111.20367431640625: 100%|███████████████████████████████████████████████████| 20/20 [00:06<00:00,  2.99it/s]
+Optimizing coupling...
+Bd_0: 2167.4658203125,bd_1:2218.31494140625,lagrangian:552.9896850585938: 100%|██████████████████████████████████████████████████| 20/20 [00:06<00:00,  2.89it/s]
+/work2/Sebas/Parametric_Density_Path_Opt/Parametric_pushforward/parametric_pushforward/visualization.py:416: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  plt.tight_layout(rect=[0, 0.07, 0.9, 0.95])
+Optimizing path...
+  0%|                                                                                                                                     | 0/20 [00:00<?, ?it/s]/work2/Sebas/conda_envs/PDPO/lib/python3.12/site-packages/torchdyn/numerics/odeint.py:83: UserWarning: Setting tolerances has no effect on fixed-step methods
+  warn("Setting tolerances has no effect on fixed-step methods")
+Path_opt: 542.8079833984375,ke:429.8772888183594,pe:112.93070983886719: 100%|████████████████████████████████████████████████████| 20/20 [00:06<00:00,  2.98it/s]
+Optimizing coupling...
+Bd_0: 2275.572265625,bd_1:2205.724609375,lagrangian:546.4994506835938: 100%|█████████████████████████████████████████████████████| 20/20 [00:06<00:00,  2.96it/s]
+Optimizing path...
+Path_opt: 535.8511352539062,ke:429.4007568359375,pe:106.45036315917969: 100%|████████████████████████████████████████████████████| 20/20 [00:06<00:00,  2.98it/s]
+Optimizing coupling...
+Bd_0: 2310.059326171875,bd_1:2215.884033203125,lagrangian:533.6880493164062:  70%|████████████████████████████████▉              | 14/20 [00:04<00:02,  2.87it/s]
+Traceback (most recent call last):
+  File "/work2/Sebas/Parametric_Density_Path_Opt/Parametric_pushforward/density_path_optimization.py", line 341, in <module>
+    run_experiments(str(dir_))
+  File "/work2/Sebas/Parametric_Density_Path_Opt/Parametric_pushforward/density_path_optimization.py", line 253, in run_experiments
+    outputs = spline.optimize_coupling(
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/work2/Sebas/Parametric_Density_Path_Opt/Parametric_pushforward/parametric_pushforward/spline.py", line 596, in optimize_coupling
+    samples_path = self.gen_sample_trajectory(x0 = x0_eval,num_samples=bs,t_traj = t_traj,time_steps_node=t_node,solver = 'midpoint',sensitivity='autograd')
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/work2/Sebas/Parametric_Density_Path_Opt/Parametric_pushforward/parametric_pushforward/spline.py", line 304, in gen_sample_trajectory
+    samples = node_theta.trajectory(z.clone(),t_span = t_node)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/work2/Sebas/conda_envs/PDPO/lib/python3.12/site-packages/torchdyn/core/neuralde.py", line 100, in trajectory
+    _, sol = odeint(self.vf, x, t_span, solver=self.solver, atol=self.atol, rtol=self.rtol)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/work2/Sebas/conda_envs/PDPO/lib/python3.12/site-packages/torchdyn/numerics/odeint.py", line 85, in odeint
+    return _fixed_odeint(f_, x, t_span, solver, save_at=save_at, args=args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/work2/Sebas/conda_envs/PDPO/lib/python3.12/site-packages/torchdyn/numerics/odeint.py", line 431, in _fixed_odeint
+    if torch.isclose(t, save_at).sum():
+       ^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt

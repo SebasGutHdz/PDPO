@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/work2/Sebas/Parametric_Density_Path_Opt/Parametric_pushforward/density_path_optimization.py", line 341, in <module>
+    run_experiments(dir_)
+  File "/work2/Sebas/Parametric_Density_Path_Opt/Parametric_pushforward/density_path_optimization.py", line 116, in run_experiments
+    prior = setup_prior(config, device)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/work2/Sebas/Parametric_Density_Path_Opt/Parametric_pushforward/parametric_pushforward/setup_density_path_problem.py", line 58, in setup_prior
+    prior = MultivariateNormal(torch.zeros(config['architecture']['input_dim']).to(device),torch.eye(config['architecture']['input_dimension']).to(device))
+                                                                                                     ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+KeyError: 'input_dimension'

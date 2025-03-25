@@ -1,0 +1,63 @@
+Experiment 1
+/work2/Sebas/conda_envs/PDPO/lib/python3.12/site-packages/torchdyn/numerics/odeint.py:83: UserWarning: Setting tolerances has no effect on fixed-step methods
+  warn("Setting tolerances has no effect on fixed-step methods")
+/work2/Sebas/Parametric_Density_Path_Opt/Parametric_pushforward/parametric_pushforward/visualization.py:416: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  plt.tight_layout(rect=[0, 0.07, 0.9, 0.95])
+/work2/Sebas/conda_envs/PDPO/lib/python3.12/site-packages/torchdyn/numerics/odeint.py:83: UserWarning: Setting tolerances has no effect on fixed-step methods
+  warn("Setting tolerances has no effect on fixed-step methods")
+Optimizing path...
+Path_opt: 4.087043285369873,ke:4.087043285369873,pe:0.0: 100%|███████████████████████████████████████████████████████████| 20/20 [00:05<00:00,  3.80it/s]
+Optimizing coupling...
+Bd_0: 2204.806884765625,bd_1:2159.09033203125,lagrangian:4.179835796356201:  30%|████████████▎                            | 6/20 [00:01<00:03,  3.61it/s]
+Traceback (most recent call last):
+  File "/work2/Sebas/Parametric_Density_Path_Opt/Parametric_pushforward/density_path_optimization.py", line 369, in <module>
+    run_experiments(str(dir_))
+  File "/work2/Sebas/Parametric_Density_Path_Opt/Parametric_pushforward/density_path_optimization.py", line 324, in run_experiments
+    outputs = spline.optimize_coupling(
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/work2/Sebas/Parametric_Density_Path_Opt/Parametric_pushforward/parametric_pushforward/spline.py", line 597, in optimize_coupling
+    samples_path = self.gen_sample_trajectory(x0 = x0_eval,num_samples=bs,t_traj = t_traj,time_steps_node=t_node,solver = 'midpoint',sensitivity='autograd')
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/work2/Sebas/Parametric_Density_Path_Opt/Parametric_pushforward/parametric_pushforward/spline.py", line 305, in gen_sample_trajectory
+    samples = node_theta.trajectory(z.clone(),t_span = t_node)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/work2/Sebas/conda_envs/PDPO/lib/python3.12/site-packages/torchdyn/core/neuralde.py", line 100, in trajectory
+    _, sol = odeint(self.vf, x, t_span, solver=self.solver, atol=self.atol, rtol=self.rtol)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/work2/Sebas/conda_envs/PDPO/lib/python3.12/site-packages/torchdyn/numerics/odeint.py", line 85, in odeint
+    return _fixed_odeint(f_, x, t_span, solver, save_at=save_at, args=args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/work2/Sebas/conda_envs/PDPO/lib/python3.12/site-packages/torchdyn/numerics/odeint.py", line 428, in _fixed_odeint
+    _, x, _ = solver.step(f, x, t, dt, k1=None, args=args)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/work2/Sebas/conda_envs/PDPO/lib/python3.12/site-packages/torchdyn/numerics/solvers/ode.py", line 84, in step
+    if k1 == None: k1 = f(t, x,*args)
+                        ^^^^^^^^^^^^^
+  File "/work2/Sebas/conda_envs/PDPO/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/work2/Sebas/conda_envs/PDPO/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/work2/Sebas/conda_envs/PDPO/lib/python3.12/site-packages/torchdyn/core/defunc.py", line 77, in forward
+    else: x = self.vf(t, x, args=args)
+              ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/work2/Sebas/conda_envs/PDPO/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/work2/Sebas/conda_envs/PDPO/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/work2/Sebas/Parametric_Density_Path_Opt/Parametric_pushforward/parametric_pushforward/parametric_mlp.py", line 208, in forward
+    return self.model(torch.cat([x,t],1), self.theta)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/work2/Sebas/conda_envs/PDPO/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/work2/Sebas/conda_envs/PDPO/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/work2/Sebas/Parametric_Density_Path_Opt/Parametric_pushforward/parametric_pushforward/parametric_mlp.py", line 167, in forward
+    w = theta[current_idx:current_idx+w_size].view(self.w,self.w)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt
