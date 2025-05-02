@@ -1,22 +1,22 @@
 # Device configuration
-device: "cuda:2"  # Change as needed
+device: "cuda:3"  # Change as needed
 
 experiment_seed: 0
 
 # Data configuration
 data:
   source:
-    name: "gaussian0"  # Source distribution
+    name: "gaussian0_s"  # Source distribution
     checkpoint: "final"  # Checkpoint to load "final"/ None for random 
   target:
-    name: "gaussian1"    # Target distribution
+    name: "gaussian1_s"    # Target distribution
     checkpoint: "final"  # Checkpoint to load "final"/ None for random
   model_dir: "/models/"  # Directory containing model checkpoints
 
 # Architecture configuration
 architecture:
   input_dim: 2
-  hidden_dim: 128
+  hidden_dim: 64
   num_layers: 4
   activation: "softplus"  # Options: softplus, relu, etc.
   time_varying: True
@@ -30,14 +30,14 @@ prior:
 # Spline configuration
 spline:
   type: "cubic"  # Options: linear, cubic
-  num_collocation: 5  # Number of collocation points
-  t_partition: 25     # Time partition points
+  num_collocation: 7  # Number of collocation points
+  t_partition: 20     # Time partition points
   det_time: 1
 
 # Potential functions
 potential_functions:
   # - "geodesic"
-  - "fisher_information"
+  # - "fisher_information"
   # - "entropy"
   # - "obstacle_cost_vneck"
   # - "quadartic_well"
@@ -45,7 +45,7 @@ potential_functions:
   - "obstacle_cost_stunnel"
   # - "obstacle_cost_gmm"
 coefficients_potentials:
-  sigma: 1.0
+  sigma: 0.0
   weight_obstacle: 1500
   weight_interaction: 50
 
@@ -60,17 +60,22 @@ optimization:
   
   coupling:
     steps: [20]          # Number of coupling optimization steps
-    learning_rate: 0.001
+    learning_rate: 0.00005
     weight_decay: 0.001
     scheduler:
-      step_size: 500
+      type: 'StepLR'
+      step_size: 10
       gamma: 0.1
   path:
     steps: [20]          # Number of path optimization steps
     learning_rate: 0.001
     scheduler:
-      step_size: 500
-      gamma: 0.1
+      type: "StepLR"  #cosine or StepLR
+      step_size: 5 # for StepLR
+      gamma: 0.9 # for Step LR
+      T_0: 5 # for cosine
+      T_mult: 2 # for cosine
+      eta_min: 0.000001 # for cosine
 
   optimization_steps: [20]
   t_node: 10
@@ -84,10 +89,10 @@ trace_estimator: "exact"  # Options: exact, hutchinson
 # Visualization configuration
 visualization:
   plot_bounds:
-    x_min: -15.
-    x_max: 15.
-    y_min: -15
-    y_max: 15.
+    x_min: -3.
+    x_max: 3.
+    y_min: -3
+    y_max: 3.
   num_plot_samples: 1000
   num_time_steps: 10
   solver: "midpoint"

@@ -1,7 +1,7 @@
 # Device configuration
 device: "cuda:3"  # Change as needed
 
-experiment_seed: 0
+experiment_seed: 2  # Random seed for reproducibility
 
 # Data configuration
 data:
@@ -47,7 +47,7 @@ potential_functions:
   # - "obstacle_cost_stunnel"
   # - "obstacle_cost_gmm"
 coefficients_potentials:
-  sigma: 2.0
+  sigma: 0.0
   weight_obstacle: 1500
   weight_interaction: 50
 
@@ -75,8 +75,12 @@ optimization:
     learning_rate: 0.001
     scheduler:
 
-      step_size: 100
-      gamma: 0.1
+      type: "StepLR"  #cosine or StepLR
+      step_size: 2 # for StepLR
+      gamma: 0.1 # for Step LR
+      T_0: 5 # for cosine
+      T_mult: 2 # for cosine
+      eta_min: 0.000001 # for cosine
 
   optimization_steps: [15]
   t_node: 10

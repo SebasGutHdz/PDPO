@@ -1,0 +1,24 @@
+# config.yaml
+training:
+  n_epochs:  2_000
+  batch_size: 2500
+  learning_rate : 0.001
+  device: 'cuda:3' # 'cuda:0' or 'cuda:1' or 'cuda:2' or 'cpu'
+  save_interval: 1000
+  checkpoint_dir: 'models/'
+
+model:
+  input_dim: 2
+  hidden_dim: 256
+  num_layers: 4
+  activation_fn: 'softplus' # or 'tanh' or 'softplus' or 'relu' or 'sin'
+  time_varying: True
+
+data:
+  reference: '8gaussiansv3' # 
+  target: '4gaussians' #
+  #swissroll,circles,rings,moons,8gaussians,8gaussiansv2,8gaussiansv3,
+  #4gaussians,gaussian0,gaussian1, gaussian0_d,gaussian1_d,gauss0_opinion_2d
+  # gauss1_opinion_2d, gauss0_opinion_1000d, gauss1_opinion_1000d,half_std_gaussian
+  total_data: 50_000
+  

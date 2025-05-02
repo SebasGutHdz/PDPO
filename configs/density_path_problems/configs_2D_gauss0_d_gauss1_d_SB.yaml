@@ -1,5 +1,5 @@
 # Device configuration
-device: "cuda:2"  # Change as needed
+device: "cuda:1"  # Change as needed
 
 experiment_seed: 0
 
@@ -32,7 +32,7 @@ prior:
 # Spline configuration
 spline:
   type: "cubic"  # Options: linear, cubic
-  num_collocation: 5  # Number of collocation points
+  num_collocation: 3  # Number of collocation points
   t_partition: 20     # Time partition points
   det_time: 1
 
@@ -47,7 +47,7 @@ potential_functions:
   # - "obstacle_cost_stunnel"
   # - "obstacle_cost_gmm"
 coefficients_potentials:
-  sigma: 2.0
+  sigma: 1.0
   weight_obstacle: 1500
   weight_interaction: 50
 
@@ -56,8 +56,6 @@ coefficients_potentials:
 
 # Optimization configuration
 optimization:
-
-  
 
   geodesic_warmup: False
   geodesic_warmup_steps: 500
@@ -74,13 +72,16 @@ optimization:
     steps: [20]          # Number of path optimization steps
     learning_rate: 0.001
     scheduler:
-
-      step_size: 100
-      gamma: 0.1
+      type: "StepLR"  #cosine or StepLR
+      step_size: 5 # for StepLR
+      gamma: 0.1 # for Step LR
+      T_0: 5 # for cosine
+      T_mult: 2 # for cosine
+      eta_min: 0.000001 # for cosine
 
   optimization_steps: [20]
   t_node: 10
-  batch_size: 5000
+  batch_size: 1000
   weight_boundary: 1000
   num_samples: 1000
 

@@ -1,0 +1,16 @@
+data:
+  total_data: 10000
+  type: gaussian0_s
+model:
+  activation_fn: softplus
+  hidden_dim: 64
+  input_dim: 2
+  num_layers: 4
+  time_varying: true
+training:
+  batch_size: 2500
+  checkpoint_dir: models/
+  device: cuda:2
+  learning_rate: 0.001
+  n_epochs: 2000
+  save_interval: 1000
