@@ -98,28 +98,29 @@ def sample_cov_mats(k,n):
   return cov_mats_lkj
 
 # L2-UVP
-def monge_map_torch(sig0,sig1,x0):
-
+def monge_map_torch(sig0,sig1,x0,mu0 = None,mu1 = None):
+    if mu0 is None:
+        mu0 = torch.zeros(sig0.shape[0],1).to(sig0)
+    if mu1 is None:
+        mu1 = torch.zeros(sig1.shape[0],1).to(sig1)
     gamma0,gamma0_inv = sqrt_cov(sig0,inverse=True)
     gamma0 = gamma0.type(torch.float32)
     gamma0_inv = gamma0_inv.type(torch.float32)
     mat = sqrt_cov(gamma0@sig1@gamma0,inverse = False).type(torch.float32)
     monge = gamma0_inv@mat@gamma0_inv
 
-    monge_z = torch.matmul(x0,monge.T)
+    monge_z = torch.matmul(x0-mu0,monge.T)+mu1
 
     return monge_z
 
-def l2_uvp(model0,model1,rho0,rho1,sig0,sig1,device,num_samples = 10_000):
+def l2_uvp(spline,x0,sig0,sig1,mu0,mu1):
 
-    x0 = rho0.sample((num_samples,)).to(device)
-
-    x1 = monge_map_torch(sig0,sig1,x0)
+    x1 = monge_map_torch(sig0,sig1,x0,mu0,mu1)
 
     var_x1 = torch.sum(torch.var(x1,dim = 0))
 
-    z = model0(x0)
-    x1_hat = model1(z,reverse = True)
+    z = spline.pull_back(spline.x0.flatten(),x0)
+    x1_hat = spline.push_forward(spline.x1.flatten(),z)
 
 
     l2_uvp = torch.mean((x1_hat-x1).norm(dim = 1)**2)/(var_x1)
@@ -428,7 +429,8 @@ def test_results_gaussian_SB(mu0, mu1, sig0, sig1, sig, t,spline, sample_path, l
             # Obtain z from ref density
             if i == 0:
                 
-                z0 = spline.pull_back(spline.x0.flatten(),sample_path_t[0].permute(1,0))
+                # z0 = spline.pull_back(spline.x0.flatten(),sample_path_t[0].permute(1,0))
+                z0 = z.clone()
 
             # Generate samples from rho_t
             
@@ -436,15 +438,13 @@ def test_results_gaussian_SB(mu0, mu1, sig0, sig1, sig, t,spline, sample_path, l
             
             
             # Plot samples
+            ax.scatter(sample_path_t2[:, 0].detach().cpu().numpy(), 
+                       sample_path_t2[:, 1].detach().cpu().numpy(), 
+                       c='r', alpha=0.25, s=3, label='True path approx bd' if idx == 0 else "")
             ax.scatter(sample_path_t[:, 0].detach().cpu().numpy(), 
                        sample_path_t[:, 1].detach().cpu().numpy(), 
                        c='b', alpha=0.25, s=3, label='True path' if idx == 0 else "")
                        
-            ax.scatter(sample_path_t2[:, 0].detach().cpu().numpy(), 
-                       sample_path_t2[:, 1].detach().cpu().numpy(), 
-                       c='r', alpha=0.25, s=3, label='True path approx bd' if idx == 0 else "")
-                       
-    
             ax.scatter(sample_path_push[:, 0].detach().cpu().numpy(),
                           sample_path_push[:, 1].detach().cpu().numpy(),
                           c='g', alpha=0.25, s=3, label='Approximated path' if idx == 0 else "")
