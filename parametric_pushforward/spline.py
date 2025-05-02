@@ -83,6 +83,7 @@ from torchdyn.core import NeuralODE
 from torchdyn.numerics import odeint
 
 from tqdm import tqdm 
+import ot as pot
 
 import data_sets as toy_data
 
@@ -164,7 +165,6 @@ class Spline(torch.nn.Module):
         self.fisher_pot = False
         self.p = p
         self.sigma = 1
-        self.dt_coupling = torch.tensor([0.1]).to(self.device)
         # Update variables to deal with entropy
         if 'entropy' in potential:
             self.entropy_pot = True
@@ -184,6 +184,7 @@ class Spline(torch.nn.Module):
             self.potential = None
         # Setup kinetic energy functions
         self.ke_modifier = ke_modifier
+        self.dt_coupling = torch.tensor([0.05]).to(self.device)
 
         # Register parameters
         self.register_buffer('t',t)
@@ -450,9 +451,7 @@ class Spline(torch.nn.Module):
             lagrangian:(s,)
         '''
         # ke = self.kinetic_energy(samples_path,times_path)
-        if times_path[0]>times_path[1]:
-            times_path = times_path.flip(0)
-            samples_path = samples_path.flip(1)
+
         ke = self.kinetic_energy(samples_path,times_path)
         # ke = self.acceleration_energy(samples_path,times_path)
         ke = torch.trapz(ke,times_path)/2#torch.sqrt(torch.trapz(ke,times_path))/2#
@@ -530,7 +529,7 @@ class Spline(torch.nn.Module):
 
             
             optimizer.step()
-            scheduler.step()
+            
             ema.update()
             
             self.x0.data = x0_clone.data
@@ -540,6 +539,7 @@ class Spline(torch.nn.Module):
             # torch.nn.utils.clip_grad_norm_(self.parameters(), .01)
 
             pbar.set_description(f'Path_opt: {lagrangian.item()},ke:{ke.item()},pe:{pe.item()}',refresh=True)    
+        scheduler.step()
         return outputs
     
     def optimize_coupling(self, epochs, optimizer, scheduler, t_partition, ema=None, t_node=10, 
@@ -598,21 +598,21 @@ class Spline(torch.nn.Module):
                 lagrangian,_,_ = self.lagrangian(samples_path,t_traj)
                 # hamiltonian = self.hamiltonian(samples_path,t_traj)
             
-                           
+            
             terminal_cost0 = self.terminal_cost(boundary = 0,batch_size=2*bs,weight_terminal=weight_bd)
             terminal_cost1 = self.terminal_cost(boundary = 1,batch_size=2*bs,weight_terminal=weight_bd)
-
+            
             outputs['bd_0'].append(terminal_cost0.detach().cpu().numpy())
             outputs['bd_1'].append(terminal_cost1.detach().cpu().numpy())
                 
     
             terminal_cost = terminal_cost0 + terminal_cost1
-            total_cost = lagrangian + terminal_cost            
+            total_cost =  terminal_cost + lagrangian     
             
             (total_cost).backward()
     
             optimizer.step()
-            scheduler.step()
+            
             ema.update()
             
             self.knots.data = xt_clone.data
@@ -621,6 +621,7 @@ class Spline(torch.nn.Module):
             # torch.nn.utils.clip_grad_norm_(self.parameters(), .01)
 
             pbar.set_description(f'Bd_0: {terminal_cost0.item()},bd_1:{terminal_cost1.item()},lagrangian:{lagrangian.item()}',refresh=True)    
+        scheduler.step()
 
         return outputs
     
@@ -656,6 +657,8 @@ class Spline(torch.nn.Module):
         loss = torch.mean(torch.sum((ut - vt)**2,dim = 1))*weight_terminal
 
         return loss
+    
+    
     
     def hamiltonian(self,samples_path,times_path,log_density = None,score = None):
         '''

@@ -126,11 +126,21 @@ def setup_optimizers(spline,config):
                                     betas = opt_config['path'].get('betas',(0.9,0.999)),
                                     eps = opt_config['path'].get('eps',1e-8)
     )
-    scheduler_path = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(
-        optimizer= optimizer_path,
-        T_0 = opt_config['path']['scheduler'].get('T_0',200),     # Initial restartin period
-        T_mult=opt_config['path']['scheduler'].get('T_mult', 2),  # Increase restart period
-        eta_min=opt_config['path']['scheduler'].get('eta_min', 1e-6)  # Minimum learning rate
+
+    type_scheduler = opt_config['path']['scheduler'].get('type','StepLR')
+
+    if type_scheduler == 'cosine':
+        scheduler_path = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(
+            optimizer= optimizer_path,
+            T_0 = opt_config['path']['scheduler'].get('T_0',5),     # Initial restartin period
+            T_mult=opt_config['path']['scheduler'].get('T_mult', 2),  # Increase restart period
+            eta_min=opt_config['path']['scheduler'].get('eta_min', 1e-6)  # Minimum learning rate
+            )
+    if type_scheduler == 'StepLR':
+        scheduler_path = torch.optim.lr_scheduler.StepLR(
+            optimizer= optimizer_path,
+            step_size=opt_config['path']['scheduler']['step_size'],
+            gamma=opt_config['path']['scheduler']['gamma']
         )
     # Coupling optimizer
     optimizer_coupling = torch.optim.AdamW(

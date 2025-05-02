@@ -19,12 +19,9 @@ from matplotlib.animation import FuncAnimation
 import numpy as np
 
 import parametric_pushforward.data_sets as toy_data
-
 from reference_solutions.gaussian_solutions import monge_map
-
 from parametric_pushforward.parametric_mlp import ParameterizedMLP,ParameterizedWrapper
-
-from parametric_pushforward.opinion import est_directional_similarity
+from parametric_pushforward.opinion import est_directional_similarity,proj_pca
 
 import parametric_pushforward.parametric_ode_solvers
 from torchdyn.core import NeuralODE
@@ -40,7 +37,7 @@ import seaborn as sns
 from IPython.display import HTML
 
 
-def display_bds(spline,n_points = 1000,device = 'cuda:0',time_steps= 10):
+def display_bds(spline,n_points = 1000,device = 'cuda:0',time_steps= 10,z = None):
     '''
     Input:
         spline: torch.nn.Module, spline class
@@ -51,8 +48,7 @@ def display_bds(spline,n_points = 1000,device = 'cuda:0',time_steps= 10):
         None
     '''
     d = spline.sample_dim
-    # Samples from reference distribution
-    z = torch.randn(n_points,d).to(device)
+    z = spline.prior_dist.sample((n_points,)).to(device) if z is None else z
     # Boundary conditions
     theta0  = spline.x0[0][0]
     theta1 = spline.x1[0][0]
@@ -67,6 +63,7 @@ def display_bds(spline,n_points = 1000,device = 'cuda:0',time_steps= 10):
 
 def disimilarity_plot(x,ax)-> None:
 
+    _,d = x.shape
     n_est = 5000
     directional_sim = est_directional_similarity(x,n_est)
     assert directional_sim.shape == (n_est,)
@@ -82,6 +79,8 @@ def disimilarity_plot(x,ax)-> None:
     for c,p in zip(colors,patches):
         plt.setp(p,'facecolor',c)
 
+    ymax = 1000 if d == 2 else 2000
+    ax.set_ylim(0,ymax)
     ax.set_xlim(0,1)
 
 def disimilarity_snapshots(xt):
@@ -97,15 +96,15 @@ def disimilarity_snapshots(xt):
     fig.suptitle('Density Visualization and Directional Similarity Histogram',fontsize = 16)
     cmap = plt.cm.coolwarm
     for i in range(4):
-        if dim == 2:
-            ax[i].scatter(xt[:,idxs[i],0].cpu().detach().numpy(),xt[:,idxs[i],1].cpu().detach().numpy(),s = 1)
-            ax[i].set_xlabel('x')
-            ax[i].set_ylabel('y')
-        else:
-            U,S,V = torch.pca_lowrank(xt[:,idxs[i],:])
-            ax[i].scatter(U[:,0].cpu().detach().numpy(),U[:,1].cpu().detach().numpy(),s = 1)
-            ax[i].set_xlabel('PCA 1')
-            ax[i].set_ylabel('PCA 2')
+        if dim > 2:
+            # do pca 
+            xt = proj_pca(xt)[0]
+
+        ax[i].scatter(xt[:,idxs[i],0].cpu().detach().numpy(),xt[:,idxs[i],1].cpu().detach().numpy(),s = 1)
+        ax[i].set_xlabel('x')
+        ax[i].set_ylabel('y')
+        ax[i].set_xlim(-10,10)
+        ax[i].set_ylim(-10,10)
         disimilarity_plot(xt[:,idxs[i],:],ax[i+4])
         ax[i].set_title('t = {:.3f}'.format(idxs[i]/(T-1)))
 
@@ -124,6 +123,97 @@ def disimilarity_snapshots(xt):
     plt.show()
 
     
+def path_visualization_particles(xt,spline):
+    '''
+    Plot particles xt
+    xt: torch.tensor, shape (Bs,T,dim)
+    spline: torch.nn.Module, spline class. This is added to evaluate the meshgrid consistently across diff. examples
+    '''
+    from matplotlib.colors import LinearSegmentedColormap
+    bs,T,dim = xt.shape
+    #Only first two dimensions
+    if dim > 2:
+        xt = xt[:,:,:2]
+
+    # # Plot upto 512 samples
+    # if bs > 512:
+    #     idx = np.random.choice(bs,512,replace = False)
+    #     xt = xt[idx,:,:]
+        # Plot
+    # Custom colormap for time steps
+    colors = plt.cm.autumn(np.linspace(0, 1, T))
+    custom_cmap = LinearSegmentedColormap.from_list('autumn', colors)
+
+    # Create visualization with potential function
+    fig,ax = plt.subplots(figsize=(12, 10))
+
+    lower_bound_x = xt[:, :, 0].min().item()
+    upper_bound_x = xt[:, :, 0].max().item()
+    lower_bound_y = xt[:, :, 1].min().item()
+    upper_bound_y = xt[:, :, 1].max().item()
+
+    # First plot the potential function
+    X,Y = torch.meshgrid(  
+        torch.linspace(lower_bound_x,upper_bound_x,100),
+        torch.linspace(lower_bound_y,upper_bound_y,100),
+        indexing='ij'  # Ensure consistent indexing
+    )
+    num_points = X.shape[0] * X.shape[1]
+    # Create a full-dimensional input tensor but only populate first two dimensions
+    full_dim_xy = torch.zeros(num_points,1,dim, device=spline.device)
+    full_dim_xy[:,0, 0] = X.reshape(num_points).flatten()
+    full_dim_xy[:,0, 1] = Y.reshape(num_points).flatten()
+
+    
+
+    if spline.potential is None:
+        cost = torch.zeros_like(X)
+    else:
+        # Reshape for potential function evaluation
+        # flat_xy = full_dim_xy.reshape(-1, D)
+        
+        # Evaluate first potential
+        flat_cost = spline.potential[0](full_dim_xy)
+        
+        # Add other potentials
+        for i in range(1, len(spline.potential)):
+            flat_cost += spline.potential[i](full_dim_xy)
+        
+        # Reshape back to grid form - ensure flat_cost is the right size
+        cost = flat_cost.reshape(X.shape[0], X.shape[1])#.detach()
+
+    # Use autumn for the potential as specified
+    potential_cmap = plt.cm.autumn
+    contour = plt.contourf(X, Y, cost.cpu().detach(), levels=100, alpha=0.6)
+    cbar_pot = plt.colorbar(contour, label='Potential Energy')
+
+    # Now plot the samples. 
+
+    for i in range(T):
+
+        plt.scatter(
+            xt[:, i, 0],
+            xt[:,i,1],
+            c=[colors[i]], s = 10,alpha = 0.7, edgecolor='none'
+        )
+
+    # Add a colorbar for the trajectories
+
+    sm = plt.cm.ScalarMappable(cmap = custom_cmap, norm = plt.Normalize(0,1))
+    sm.set_array([])
+
+    cbar_traj = plt.colorbar(sm,ax = ax,label = 'Time (t)')
+    cbar_traj.set_ticks(np.linspace(0, 1, 5))
+    cbar_traj.set_ticklabels([f'{t:.2f}' for t in np.linspace(0, 1, 5)])
+
+    # Add grid and labels
+    plt.grid(alpha=0.2, linestyle='--', color='white')
+    plt.xlabel('Dimension 1', fontsize=12)
+    plt.ylabel('Dimension 2', fontsize=12)
+    plt.title('Optimal Transport Path Through Potential Field', fontsize=14)
+    
+    
+    plt.tight_layout()
 
 
 def path_visualization(interpolation, arch, spline, x0, y0, x1, y1, 
@@ -171,8 +261,8 @@ def path_visualization(interpolation, arch, spline, x0, y0, x1, y1,
         samples_path[:, i, :] = samples.detach().cpu() #[-1, :, :]
     
     # Create a custom colormap for time steps
-    colors = plt.cm.Blues(np.linspace(0, 1, s))
-    custom_cmap = LinearSegmentedColormap.from_list('cool', colors)
+    colors = plt.cm.autumn(np.linspace(0, 1, s))
+    custom_cmap = LinearSegmentedColormap.from_list('autumn', colors)
     
     # Create visualization with potential function
     fig,ax = plt.subplots(figsize=(12, 10))
@@ -209,7 +299,7 @@ def path_visualization(interpolation, arch, spline, x0, y0, x1, y1,
 
     # Use autumn for the potential as specified
     potential_cmap = plt.cm.autumn
-    contour = plt.contourf(X, Y, cost.cpu().detach(), levels=100, alpha=0.6, cmap=potential_cmap)
+    contour = plt.contourf(X, Y, cost.cpu().detach(), levels=100, alpha=0.6) #, cmap=potential_cmap
     cbar_pot = plt.colorbar(contour, label='Potential Energy')
     # Then overlay the trajectory
     # Plot the first two dimensions regardless of original dimensionality
@@ -320,8 +410,8 @@ def path_visualization_snapshots(interpolation, arch, spline, x0, y0, x1, y1,
         samples_path[:, i, :] = samples.detach().cpu()
     
     # Create a custom colormap for time steps
-    colors = plt.cm.Blues(np.linspace(0, 1, s))
-    custom_cmap = LinearSegmentedColormap.from_list('cool', colors)
+    colors = plt.cm.autumn(np.linspace(0, 1, s))
+    custom_cmap = LinearSegmentedColormap.from_list('autumn', colors)
     
     # Compute the potential field once for efficiency
     X, Y = torch.meshgrid(
@@ -362,7 +452,7 @@ def path_visualization_snapshots(interpolation, arch, spline, x0, y0, x1, y1,
         ax = fig.add_subplot(gs[snapshot // 3, snapshot % 3])
         
         # Plot the potential field
-        contour = ax.contourf(X, Y, cost.cpu().detach(), levels=100, alpha=0.6, cmap=plt.cm.autumn)
+        contour = ax.contourf(X, Y, cost.cpu().detach(), levels=100, alpha=0.6) #, cmap=plt.cm.autumn
         
         # Plot samples for this time segment with colors reflecting progression
         segment_colors = colors[start_idx:end_idx+1]
@@ -472,8 +562,8 @@ def path_visualization_with_trajectories(interpolation, arch, spline, x0, y0, x1
         samples_path[:, i, :] = samples.detach().cpu()
     
     # Create a custom colormap for time steps
-    colors = plt.cm.Blues(np.linspace(0, 1, s))
-    custom_cmap = LinearSegmentedColormap.from_list('cool', colors)
+    colors = plt.cm.autumn(np.linspace(0, 1, s))
+    custom_cmap = LinearSegmentedColormap.from_list('autumn', colors)
     
     # Create visualization with potential function
     fig,ax = plt.subplots(figsize=(12, 10))
@@ -500,7 +590,7 @@ def path_visualization_with_trajectories(interpolation, arch, spline, x0, y0, x1
         cost = flat_cost.reshape(X.shape[0], X.shape[1])
     
     # Plot potential field
-    contour = plt.contourf(X, Y, cost.cpu().detach(), levels=100, alpha=0.6, cmap=plt.cm.autumn)
+    contour = plt.contourf(X, Y, cost.cpu().detach(), levels=100, alpha=0.6) #
     cbar_pot = plt.colorbar(contour, label='Potential Energy')
     
     # If showing trajectories, plot lines connecting samples across time
@@ -511,7 +601,7 @@ def path_visualization_with_trajectories(interpolation, arch, spline, x0, y0, x1
             plt.plot(
                 samples_path[idx, :, idx_x].cpu().numpy(),
                 samples_path[idx, :, idx_y].cpu().numpy(),
-                '-', linewidth=0.5, alpha=0.6, color='gray'
+                '-', linewidth=0.25, alpha=0.3, color='gray'
             )
     
     # Plot the sample distributions at each time step

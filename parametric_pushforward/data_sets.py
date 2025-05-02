@@ -64,52 +64,52 @@ def inf_train_gen(data, rng=None, batch_size=200,dim=2):
         x0,_ = generate_moons(batch_size,noise=0.2)
         x0 = 3*x0-1
         return x0.numpy()
-    elif data == "8gaussians":
-        scale = 4.
-        centers = [(1, 0), (-1, 0), (0, 1), (0, -1), (1. / np.sqrt(2), 1. / np.sqrt(2)),
-                   (1. / np.sqrt(2), -1. / np.sqrt(2)), (-1. / np.sqrt(2),
-                                                         1. / np.sqrt(2)), 
-                                                         (-1. / np.sqrt(2), -1. / np.sqrt(2))]
-        centers = np.array(centers)*scale#[(scale * x, scale * y) for x, y in centers]
+    # elif data == "8gaussians":
+    #     scale = 4.
+    #     centers = [(1, 0), (-1, 0), (0, 1), (0, -1), (1. / np.sqrt(2), 1. / np.sqrt(2)),
+    #                (1. / np.sqrt(2), -1. / np.sqrt(2)), (-1. / np.sqrt(2),
+    #                                                      1. / np.sqrt(2)), 
+    #                                                      (-1. / np.sqrt(2), -1. / np.sqrt(2))]
+    #     centers = np.array(centers)*scale#[(scale * x, scale * y) for x, y in centers]
         
-        cov_mat = np.eye(2)*.1
-        noise = rng.multivariate_normal([0, 0], cov = cov_mat, size = batch_size)
+    #     cov_mat = np.eye(2)*.1
+    #     noise = rng.multivariate_normal([0, 0], cov = cov_mat, size = batch_size)
         
-        # idxs = rng.randint(0, 8, batch_size)
-        elements_per_center = batch_size // 8
+    #     # idxs = rng.randint(0, 8, batch_size)
+    #     elements_per_center = batch_size // 8
 
-        idxs = np.array([i*np.ones(elements_per_center,dtype=np.int32) for i in range(8)]).flatten()
+    #     idxs = np.array([i*np.ones(elements_per_center,dtype=np.int32) for i in range(8)]).flatten()
 
-        if len(idxs) < batch_size:
-            idxs = np.concatenate((idxs, 7*np.ones(batch_size-len(idxs),dtype=np.int32)))
+    #     if len(idxs) < batch_size:
+    #         idxs = np.concatenate((idxs, 7*np.ones(batch_size-len(idxs),dtype=np.int32)))
         
-        dataset = np.array([centers[idxs[i]] + noise[i] for i in range(batch_size)], dtype="float32")
+    #     dataset = np.array([centers[idxs[i]] + noise[i] for i in range(batch_size)], dtype="float32")
         
         
-        return dataset
-    elif data == "8gaussiansv2":
-        scale = 8.
-        centers = [(1, 0), (-1, 0), (0, 1), (0, -1), (1. / np.sqrt(2), 1. / np.sqrt(2)),
-                   (1. / np.sqrt(2), -1. / np.sqrt(2)), (-1. / np.sqrt(2),
-                                                         1. / np.sqrt(2)), 
-                                                         (-1. / np.sqrt(2), -1. / np.sqrt(2))]
-        centers = np.array(centers)*scale#[(scale * x, scale * y) for x, y in centers]
+    #     return dataset
+    # elif data == "8gaussiansv2":
+    #     scale = 8.
+    #     centers = [(1, 0), (-1, 0), (0, 1), (0, -1), (1. / np.sqrt(2), 1. / np.sqrt(2)),
+    #                (1. / np.sqrt(2), -1. / np.sqrt(2)), (-1. / np.sqrt(2),
+    #                                                      1. / np.sqrt(2)), 
+    #                                                      (-1. / np.sqrt(2), -1. / np.sqrt(2))]
+    #     centers = np.array(centers)*scale#[(scale * x, scale * y) for x, y in centers]
         
-        cov_mat = np.eye(2)*.1
-        noise = rng.multivariate_normal([0, 0], cov = cov_mat, size = batch_size)
+    #     cov_mat = np.eye(2)*.1
+    #     noise = rng.multivariate_normal([0, 0], cov = cov_mat, size = batch_size)
         
-        # idxs = rng.randint(0, 8, batch_size)
-        elements_per_center = batch_size // 8
+    #     # idxs = rng.randint(0, 8, batch_size)
+    #     elements_per_center = batch_size // 8
 
-        idxs = np.array([i*np.ones(elements_per_center,dtype=np.int32) for i in range(8)]).flatten()
+    #     idxs = np.array([i*np.ones(elements_per_center,dtype=np.int32) for i in range(8)]).flatten()
 
-        if len(idxs) < batch_size:
-            idxs = np.concatenate((idxs, 7*np.ones(batch_size-len(idxs),dtype=np.int32)))
+    #     if len(idxs) < batch_size:
+    #         idxs = np.concatenate((idxs, 7*np.ones(batch_size-len(idxs),dtype=np.int32)))
         
-        dataset = np.array([centers[idxs[i]] + noise[i] for i in range(batch_size)], dtype="float32")
+    #     dataset = np.array([centers[idxs[i]] + noise[i] for i in range(batch_size)], dtype="float32")
         
         
-        return dataset
+    #     return dataset
     elif data == "8gaussiansv3":
         scale = 16.
         centers = [(1, 0), (-1, 0), (0, 1), (0, -1), (1. / np.sqrt(2), 1. / np.sqrt(2)),
@@ -134,11 +134,11 @@ def inf_train_gen(data, rng=None, batch_size=200,dim=2):
         
         return dataset
     elif data == "4gaussians":
-        scale = 2.
+        scale = 4.
         centers = [(1, 0), (-1, 0), (0, 1), (0, -1)]
         centers = np.array(centers)*scale#[(scale * x, scale * y) for x, y in centers]
         
-        cov_mat = 0.1* np.eye(2)
+        cov_mat = 1* np.eye(2)
         noise = rng.multivariate_normal([0, 0], cov = cov_mat, size = batch_size)
         
         # idxs = rng.randint(0, 8, batch_size)
@@ -172,6 +172,16 @@ def inf_train_gen(data, rng=None, batch_size=200,dim=2):
         cov_matrix = np.eye(dim)*0.5
         mean = -np.ones(dim)
         data = rng.multivariate_normal(mean=mean, cov=cov_matrix, size=batch_size)
+        return data.astype("float32")
+    
+    elif data == "gaussian0_s":
+        cov_matrix = np.array([[1,0],[0,1]])*0.1
+        data = rng.multivariate_normal(mean=[-2, -2], cov=cov_matrix, size=batch_size)
+        return data.astype("float32")
+
+    elif data == "gaussian1_s":
+        cov_matrix = np.array([[1,0],[0,1]])*0.01
+        data = rng.multivariate_normal(mean=[2,2], cov=cov_matrix, size=batch_size)
         return data.astype("float32")
     # elif data == "gaussian1_d":
     #     cov_matrix = np.array([[1,0],[0,1]])*0.5

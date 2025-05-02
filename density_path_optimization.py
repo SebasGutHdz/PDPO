@@ -350,16 +350,18 @@ if __name__ == "__main__":
     Entry point for running the density path optimization experiment.
     Specify the configuration file to use for the experiment.
     """
-    name_experiment  = 'configs_2D_gauss0_d_gauss1_d_SB.yaml'
+    # name_experiment  = 'configs_2D_gauss0_d_gauss1_d_SB.yaml'
     # name_experiment  = 'configs_2D_gauss0_d_gauss1_d_geo.yaml'
     # name_experiment  = 'configs_10D_gauss0_d_gauss1_d_geo.yaml'
     # name_experiment  = 'configs_10D_gauss0_d_gauss1_d_SB.yaml'
     # name_experiment  = 'configs_50D_gauss0_d_gauss1_d_geo.yaml'
     # name_experiment  = 'configs_50D_gauss0_d_gauss1_d_SB.yaml'
+    # name_experiment  = 'configs_100D_gauss0_d_gauss1_d_geo.yaml'
+    # name_experiment  = 'configs_50D_gauss0_d_gauss1_d_SB.yaml'
     # name_experiment  = 'configs_8gmm_half_std.yaml'
     # name_experiment  = 'configs_8gmm_4gmm.yaml'
     # name_experiment  = 'configs_2D_vneck.yaml'
-    # name_experiment  = 'configs_2D_scurve.yaml'
+    name_experiment  = 'configs_2D_scurve.yaml'
     # name_experiment  = 'configs_opinion_2D.yaml'
     # name_experiment  = 'configs_opinion_1000D.yaml'
     dir_ = project_root / 'configs' / 'density_path_problems' / name_experiment
