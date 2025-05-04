@@ -1,7 +1,7 @@
 # Device configuration
 device: "cuda:3"  # Change as needed
 
-experiment_seed: 0
+experiment_seed: 2
 
 # Data configuration
 data:
@@ -30,8 +30,8 @@ prior:
 # Spline configuration
 spline:
   type: "cubic"  # Options: linear, cubic
-  num_collocation: 7  # Number of collocation points
-  t_partition: 20     # Time partition points
+  num_collocation: 5  # Number of collocation points
+  t_partition: 30     # Time partition points
   det_time: 1
 
 # Potential functions
@@ -60,24 +60,24 @@ optimization:
   
   coupling:
     steps: [20]          # Number of coupling optimization steps
-    learning_rate: 0.00005
+    learning_rate: 0.0001
     weight_decay: 0.001
     scheduler:
       type: 'StepLR'
       step_size: 10
-      gamma: 0.1
+      gamma: 0.9
   path:
-    steps: [20]          # Number of path optimization steps
-    learning_rate: 0.001
+    steps: [30]          # Number of path optimization steps
+    learning_rate: 0.0005
     scheduler:
       type: "StepLR"  #cosine or StepLR
-      step_size: 5 # for StepLR
-      gamma: 0.9 # for Step LR
+      step_size: 10 # for StepLR
+      gamma: 0.1 # for Step LR
       T_0: 5 # for cosine
       T_mult: 2 # for cosine
       eta_min: 0.000001 # for cosine
 
-  optimization_steps: [20]
+  optimization_steps: [18]
   t_node: 10
   batch_size: 1000
   weight_boundary: 1000

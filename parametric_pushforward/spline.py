@@ -83,7 +83,7 @@ from torchdyn.core import NeuralODE
 from torchdyn.numerics import odeint
 
 from tqdm import tqdm 
-import ot as pot
+# import ot as pot
 
 import data_sets as toy_data
 

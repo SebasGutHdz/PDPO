@@ -109,7 +109,7 @@ def congestion_cost(xt):
 
     assert congestion.shape == xt.shape[:-1]
 
-    return congestion*50
+    return congestion*5
 
 def quadartic_well(xt):
     '''
@@ -202,4 +202,4 @@ def obstacle_cost_stunnel(xx_inp,scale=1):
     out = out.view(batch_size, -1)
     out = out.view(xx_inp.size(0), xx_inp.size(1))
 
-    return out*2000
+    return out*100
