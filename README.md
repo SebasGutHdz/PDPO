@@ -24,7 +24,7 @@ For the GMM experiment, use file  _density_path_optimization2.py_.
 
 ## Visualize a new model
 
-Follow the same steps as before, in the _experiments_ folder you will find the new experiment folder with the following naming convention `source_density_name-_to_target-density-name_name-of-obstable_time-stamp.`
+Follow the same steps as before, in the _experiments_ folder you will find the new experiment folder with the following naming convention `source_density_name_to_target-density-name_obstable_time-stamp/`
 
 
 
