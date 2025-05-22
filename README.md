@@ -13,4 +13,9 @@ conda activate pdpo
 
 ## Visualize trained models.
 
-To visualize the solutions in the section _Obstacle avoidance with mean-field interaction_ , access the notebooks folder and open visualize_density_path.ipynb. Find the different experiment names for the variable `exp_dir` in the _experiments_ folder. 
+-To visualize the solutions in the section _Obstacle avoidance with mean-field interaction_ , access the notebooks folder and open _visualize_density_path.ipynb_. Find the different experiment names for the variable `exp_dir` in the _experiments_ folder. 
+-To compare our solution with other methods, open the file _compare_results.ipynb_. The rest of the methods can also be loaded in this jupiter notebook. 
+
+## Train a model
+
+
