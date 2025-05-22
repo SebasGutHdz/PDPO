@@ -9,4 +9,4 @@ conda env create -f environment.yml
 # Activate environment
 conda activate pdpo
 ```
-2. Modify the file **ode.py** of the _torchdyn_ library by copying and pasting the contents of the file **/parametric_pushforward/ode_file_substitute.py.** 
+2. Replace the contents of the file **ode.py** in the _torchdyn_ library with the contents of the file **/parametric_pushforward/ode_file_substitute.py.** *** PDPO WILL NOT WORK IF THIS STEP IS OMITTED. ***
