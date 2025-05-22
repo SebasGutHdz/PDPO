@@ -1,5 +1,5 @@
 # PDPO
-
+## Setup PDPO
 This folder contains the implementation of our algorithm **PDPO**.  
 1. Install the necessary packages by creating a conda environment using the yml file
 ```
@@ -9,4 +9,8 @@ conda env create -f environment.yml
 # Activate environment
 conda activate pdpo
 ```
-2. Replace the contents of the file **ode.py** in the _torchdyn_ library with the contents of the file **/parametric_pushforward/ode_file_substitute.py.** 	***All this text is important***
+2. Replace the contents of the file **ode.py** in the _torchdyn_ library with the contents of the file **/parametric_pushforward/ode_file_substitute.py.** 	***PDPO WILL NOT WORK IF THIS STEP IS OMITTED.***
+
+## Visualize trained models.
+
+To visualize the solutions in the section _Obstacle avoidance with mean-field interaction_ , access the notebooks folder and open visualize_density_path.ipynb. Find the different experiment names for the variable `exp_dir` in the _experiments_ folder. 
