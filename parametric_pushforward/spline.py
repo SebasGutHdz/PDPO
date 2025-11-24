@@ -58,8 +58,8 @@ References:
 [2] Optimal Transport and Wasserstein Distance
 [3] Neural Ordinary Differential Equations
 
-Authors: [Your names]
-License: [License info]
+Authors: Sebastian Gutierrez Hernandez
+
 '''
 
 # Add project root to path for imports
